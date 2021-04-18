@@ -1,0 +1,111 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.minimap.enabled": false,
+		"cmake.configureOnOpen": true,
+		"C_Cpp.intelliSenseEngineFallback": "Enabled",
+		"C_Cpp.configurationWarnings": "Disabled",
+		"C_Cpp.intelliSenseEngine": "Tag Parser",
+		"C_Cpp.clang_format_path": "/usr/bin/clang-format",
+		"editor.formatOnSave": true,
+		"files.associations": {
+			"array": "cpp",
+			"hash_map": "cpp",
+			"deque": "cpp",
+			"list": "cpp",
+			"string": "cpp",
+			"unordered_map": "cpp",
+			"vector": "cpp",
+			"string_view": "cpp",
+			"initializer_list": "cpp",
+			"optional": "cpp",
+			"istream": "cpp",
+			"ostream": "cpp",
+			"system_error": "cpp",
+			"functional": "cpp",
+			"tuple": "cpp",
+			"type_traits": "cpp",
+			"utility": "cpp",
+			"*.tcc": "cpp"
+		}
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "HelloWorld",
+				"type": "cppdbg",
+				"request": "launch",
+				"program": "${workspaceRoot}/bin/helloworld",
+				"args": [
+					"-p",
+					"${workspaceRoot}"
+				],
+				"stopAtEntry": false,
+				"cwd": "${workspaceFolder}",
+				"environment": [],
+				"externalConsole": false,
+				"MIMode": "gdb",
+				"setupCommands": [
+					{
+						"description": "Enable pretty-printing for gdb",
+						"text": "-enable-pretty-printing",
+						"ignoreFailures": true
+					}
+				]
+			}
+		],
+		"compounds": []
+	},
+	"extensions": {},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "cmake",
+				"type": "shell",
+				"options": {
+					"cwd": "${workspaceRoot}/build"
+				},
+				"command": "cmake",
+				"args": [
+					"-G",
+					"Unix Makefiles",
+					"-DCMAKE_BUILD_TYPE=Debug",
+					".."
+				],
+			},
+			{
+				"label": "make",
+				"type": "shell",
+				"options": {
+					"cwd": "${workspaceRoot}/build"
+				},
+				"dependsOn": [
+					"cmake"
+				],
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				},
+				"command": "make",
+				"problemMatcher": {
+					"owner": "cpp",
+					"fileLocation": "absolute",
+					"pattern": {
+						"regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+						"file": 1,
+						"line": 2,
+						"column": 3,
+						"severity": 4,
+						"message": 5
+					}
+				}
+			}
+		]
+	}
+}
