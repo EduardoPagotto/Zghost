@@ -1,5 +1,6 @@
 #include <zghost/bus/Latch.hpp>
 #include <zghost/bus/Memory.hpp>
+#include <zghost/z80/OpCode.hpp>
 #include <zghost/z80/Z80.hpp>
 
 int main(int argn, char** argv) {
@@ -17,6 +18,10 @@ int main(int argn, char** argv) {
     bus.addIo("port2", &port2);
 
     Z80* pZ80 = new Z80(&bus);
+    pZ80->reset();
+
+    OpCode opcode = OpCode();
+    opcode.step(pZ80);
 
     // uint8_t h, l;
     // Register16* r = new Register16(&l, &h);

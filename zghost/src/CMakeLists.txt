@@ -6,7 +6,8 @@ PROJECT(zghostApi)
 set (SourcesCore Latch.cpp
                  Memory.cpp
                  Bus.cpp
-                 Z80.cpp)
+                 Z80.cpp
+                 OpCode.cpp)
 
 # #define os includes
 set (IncludeCore ${CMAKE_SOURCE_DIR})

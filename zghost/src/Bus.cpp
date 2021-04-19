@@ -1,6 +1,6 @@
 #include <zghost/bus/Bus.hpp>
 
-uint8_t Bus::readyMemory(const uint16_t& address) {
+uint8_t Bus::readMemory(const uint16_t& address) {
     using namespace std;
     for (auto it = mem.begin(); it != mem.end(); it++) {
 

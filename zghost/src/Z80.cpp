@@ -26,3 +26,14 @@ Z80::Z80(Bus* pBus) {
 }
 
 Z80::~Z80() {}
+
+void Z80::reset() {
+    A = 0xff;
+    F, B, C, D, E, H, L = 0;
+    A_, F_, B_, C_, D_, E_, H_, L_ = 0;
+    IXH, IXL, IYH, IYL = 0;
+    sp, I, R, R7, pc, IFF1, IFF2, IM = 0;
+    Tstates = 0;
+    Halted = false;
+    interruptsEnabledAt = 0;
+}
