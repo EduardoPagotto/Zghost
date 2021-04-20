@@ -11,9 +11,15 @@ class Latch : public Device {
     virtual bool write(const uint16_t& address, const uint8_t& value) override;
     virtual bool valid(const uint16_t& address) override;
 
+    std::tuple<uint8_t, bool> readDirect();
+    void writeDirect(const uint8_t& value);
+
   private:
     uint16_t address;
     uint8_t value;
+    bool has_value;
 };
+
+
 
 #endif

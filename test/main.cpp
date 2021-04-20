@@ -2,31 +2,12 @@
 #include <zghost/bus/Memory.hpp>
 #include <zghost/z80/Z80.hpp>
 
+#include "Console.hpp"
+
 int main(int argn, char** argv) {
 
-    Bus bus;
-
-    Memory rom(0x0000, 256);
-
-    rom.load("./examples/interrup1.bin");
-
-    Memory ram(0x0100, 256);
-    Latch port1(0x01);
-    Latch port2(0x02);
-
-    bus.addMemory("rom", &rom);
-    bus.addMemory("ram", &ram);
-    bus.addIo("port1", &port1);
-    bus.addIo("port2", &port2);
-
-    Z80* pZ80 = new Z80(&bus);
-    pZ80->reset();
-
-    while (true)
-        pZ80->step();
-
-    // uint8_t h, l;
-    // Register16* r = new Register16(&l, &h);
+    Console con;
+    con.exec();
 
     return 0;
 }

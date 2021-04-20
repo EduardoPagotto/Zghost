@@ -8,7 +8,8 @@ set (LibsHelloWorld ${CMAKE_SOURCE_DIR}/bin/libzghostApi.a)
 #define os includes
 set (IncludesHelloWorld ${CMAKE_SOURCE_DIR})
 
-add_executable (helloworld main.cpp)
+add_executable (helloworld main.cpp
+                           Console.cpp)
 
 target_link_libraries(helloworld ${LibsHelloWorld})
 target_include_directories (helloworld PRIVATE ${IncludesHelloWorld})
