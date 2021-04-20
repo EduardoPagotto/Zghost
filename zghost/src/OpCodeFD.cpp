@@ -1,3 +1,4 @@
+#include <zghost/z80/OpCodeDDCBFDCB.hpp>
 #include <zghost/z80/OpCodeFD.hpp>
 
 /* ADD iy,BC */
@@ -500,14 +501,14 @@ void instrFD__CP_A_iREGpDD(Z80* z, const uint8_t& opcode) {
     z->oppCp(bytetemp);
 }
 
-// /* shift DDFDCB */
-// void instrFD__SHIFT_DDFDCB(Z80* z, const uint8_t& opcode) {
-// 	//z->Tstates += 4
-// 	addr := z->IY->get() + static_cast<uint16_t>(R16::signExtend(z->load8()))
-// 	opcode2 := z->load8()
-// 	z->R++
-// 	OpcodeDDCBMap[opcode2](z, opcode2, addr)
-// }
+/* shift DDFDCB */
+void instrFD__SHIFT_DDFDCB(Z80* z, const uint8_t& opcode) {
+    // z->Tstates += 4
+    uint16_t addr = z->IY->get() + static_cast<uint16_t>(R16::signExtend(z->load8()));
+    uint8_t opcode2 = z->load8();
+    z->R++;
+    opcodeDDCBFDCBStep(z, opcode2, addr);
+}
 
 /* POP iy */
 void instrFD__POP_REG(Z80* z, const uint8_t& opcode) {
@@ -715,7 +716,7 @@ void initOpCodeFD() {
     /* CP A,(REGISTER+dd) */
     opcodemapfd[0xbe] = instrFD__CP_A_iREGpDD;
     // /* shift DDFDCB */
-    // opcodemapfd[0xcb] = instrFD__SHIFT_DDFDCB;
+    opcodemapfd[0xcb] = instrFD__SHIFT_DDFDCB;
     /* POP REGISTER */
     opcodemapfd[0xe1] = instrFD__POP_REG;
     /* EX (SP),REGISTER */

@@ -1,6 +1,7 @@
 #include <zghost/z80/OpCode.hpp>
 #include <zghost/z80/OpCodeCB.hpp>
 #include <zghost/z80/OpCodeDD.hpp>
+#include <zghost/z80/OpCodeDDCBFDCB.hpp>
 #include <zghost/z80/OpCodeED.hpp>
 #include <zghost/z80/OpCodeFD.hpp>
 
@@ -1255,7 +1256,7 @@ void initOpCode() {
     opcodemap[0x24] = instr__INC_H;
     opcodemap[0x25] = instr__DEC_H;
     opcodemap[0x26] = instr__LD_H_NN;
-    // opcodemap[0x27] = instr__DAA;
+    // opcodemap[0x27] = instr__DAA;  //FIXME: refazer!!!
     opcodemap[0x28] = instr__JR_Z_OFFSET;
     opcodemap[0x29] = instr__ADD_HL_HL;
     opcodemap[0x2a] = instr__LD_HL_iNNNN;
@@ -1419,7 +1420,7 @@ void initOpCode() {
     opcodemap[0xc8] = instr__RET_Z;
     opcodemap[0xc9] = instr__RET;
     opcodemap[0xca] = instr__JP_Z_NNNN;
-    // opcodemap[0xcb] = instr__SHIFT_CB;
+    opcodemap[0xcb] = instr__SHIFT_CB;
     opcodemap[0xcc] = instr__CALL_Z_NNNN;
     opcodemap[0xcd] = instr__CALL_NNNN;
     opcodemap[0xce] = instr__ADC_A_NN;
@@ -1437,7 +1438,7 @@ void initOpCode() {
     opcodemap[0xda] = instr__JP_C_NNNN;
     opcodemap[0xdb] = instr__IN_A_iNN;
     opcodemap[0xdc] = instr__CALL_C_NNNN;
-    // opcodemap[0xdd] = instr__SHIFT_DD;
+    opcodemap[0xdd] = instr__SHIFT_DD;
     opcodemap[0xde] = instr__SBC_A_NN;
     opcodemap[0xdf] = instr__RST_18;
     opcodemap[0xe0] = instr__RET_PO;
@@ -1453,7 +1454,7 @@ void initOpCode() {
     opcodemap[0xea] = instr__JP_PE_NNNN;
     opcodemap[0xeb] = instr__EX_DE_HL;
     opcodemap[0xec] = instr__CALL_PE_NNNN;
-    // opcodemap[0xed] = instr__SHIFT_ED;
+    opcodemap[0xed] = instr__SHIFT_ED;
     opcodemap[0xee] = instr__XOR_A_NN;
     opcodemap[0xef] = instr__RST_28;
     opcodemap[0xf0] = instr__RET_P;
@@ -1469,7 +1470,7 @@ void initOpCode() {
     opcodemap[0xfa] = instr__JP_M_NNNN;
     opcodemap[0xfb] = instr__EI;
     opcodemap[0xfc] = instr__CALL_M_NNNN;
-    // opcodemap[0xfd] = instr__SHIFT_FD;
+    opcodemap[0xfd] = instr__SHIFT_FD;
     opcodemap[0xfe] = instr__CP_NN;
     opcodemap[0xff] = instr__RST_38;
 
@@ -1477,6 +1478,7 @@ void initOpCode() {
     initOpCodeED();
     initOpCodeDD();
     initOpCodeFD();
+    initOpCodeDDCBFDCB();
 }
 
 void opcodeStep(Z80* z, const uint8_t opcode) { opcodemap[opcode](z, opcode); }
