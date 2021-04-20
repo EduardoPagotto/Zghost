@@ -1,5 +1,6 @@
 #include <zghost/z80/OpCode.hpp>
 #include <zghost/z80/OpCodeCB.hpp>
+#include <zghost/z80/OpCodeED.hpp>
 
 void instr__NOP(Z80* z, const uint8_t& opcode) { z->Tstates += 4; }
 
@@ -1069,17 +1070,18 @@ void instr__CALL_PE_NNNN(Z80* z, const uint8_t& opcode) {
     }
 }
 
-// /* shift ED */
-// void instr__SHIFT_ED(Z80* z, const uint8_t& opcode) {
-// 	//z->Tstates += 4
-// 	uint8_t = opcode2 = z->load8();
-// 	z->R++;
-// 	if f := OpcodeEDMap[opcode2]; f != nil { // FIXME: continuar
-// 		f(z, opcode2)
-// 	} else {
-// 		invalidOpcode(z, opcode2)
-// 	}
-// }
+/* shift ED */
+void instr__SHIFT_ED(Z80* z, const uint8_t& opcode) {
+    // //z->Tstates += 4
+    // uint8_t = opcode2 = z->load8();
+    // z->R++;
+    // if f := OpcodeEDMap[opcode2]; f != nil { // FIXME: continuar
+    // 	f(z, opcode2)
+    // } else {
+    // 	invalidOpcode(z, opcode2)
+    // }
+    opcodeEDStep(z, opcode);
+}
 
 /* XOR A,nn */
 void instr__XOR_A_NN(Z80* z, const uint8_t& opcode) {
@@ -1501,6 +1503,7 @@ void initOpCode() {
     opcodemap[0xff] = instr__RST_38;
 
     initOpCodeCB();
+    initOpCodeED();
 }
 
 void opcodeStep(Z80* z, const uint8_t opcode) { opcodemap[opcode](z, opcode); }
