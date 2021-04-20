@@ -1,17 +1,6 @@
 #include <zghost/z80/OpCode.hpp>
 #include <zghost/z80/Z80.hpp>
 
-// The flags
-const uint8_t FLAG_C = 0x01;
-const uint8_t FLAG_N = 0x02;
-const uint8_t FLAG_P = 0x04;
-const uint8_t FLAG_V = FLAG_P;
-const uint8_t FLAG_3 = 0x08;
-const uint8_t FLAG_H = 0x10;
-const uint8_t FLAG_5 = 0x20;
-const uint8_t FLAG_Z = 0x40;
-const uint8_t FLAG_S = 0x80;
-
 const uint8_t Z80::halfcarryAddTable[] = {0, FLAG_H, FLAG_H, FLAG_H, 0, 0, 0, FLAG_H};
 const uint8_t Z80::halfcarrySubTable[] = {0, 0, FLAG_H, 0, FLAG_H, 0, FLAG_H, FLAG_H};
 const uint8_t Z80::overflowAddTable[] = {0, 0, 0, FLAG_V, FLAG_V, 0, 0, 0};
@@ -275,14 +264,14 @@ void Z80::oppCp(const uint8_t& value) {
 
 // //-- aritmetric
 
-void Z80::oppAdd(const uint8_t& value) {
+void Z80::add(const uint8_t& value) {
     uint addtemp = uint(this->A) + uint(value);
     uint8_t lookup = ((this->A & 0x88) >> 3) | ((value & 0x88) >> 2) | static_cast<uint8_t>((addtemp & 0x88) >> 1);
     this->A = static_cast<uint8_t>(addtemp);
     this->F = ((addtemp & 0x100 != 0) ? FLAG_C : 0) | halfcarryAddTable[lookup & 0x07] | overflowAddTable[lookup >> 4] | sz53Table[this->A];
 }
 
-void Z80::oppAdd16(R16* value1, uint16_t value2) {
+void Z80::add16(R16* value1, const uint16_t& value2) {
     uint add16temp = uint(value1->get()) + uint(value2);
 
     uint8_t lookup = static_cast<uint8_t>(((value1->get() & 0x0800) >> 11) | ((value2 & 0x0800) >> 10) |
@@ -294,7 +283,7 @@ void Z80::oppAdd16(R16* value1, uint16_t value2) {
               (static_cast<uint8_t>(add16temp >> 8) & (FLAG_3 | FLAG_5)) | halfcarryAddTable[lookup];
 }
 
-void Z80::oppAdc(const uint8_t& value) {
+void Z80::adc(const uint8_t& value) {
     uint16_t adctemp = static_cast<uint16_t>(this->A) + static_cast<uint16_t>(value) + (static_cast<uint16_t>(this->F) & FLAG_C);
 
     uint8_t lookup = static_cast<uint8_t>(((static_cast<uint16_t>(this->A) & 0x88) >> 3) | ((static_cast<uint16_t>(value) & 0x88) >> 2) |
@@ -304,7 +293,7 @@ void Z80::oppAdc(const uint8_t& value) {
     this->F = ((adctemp & 0x100) != 0 ? FLAG_C : 0) | halfcarryAddTable[lookup & 0x07] | overflowAddTable[lookup >> 4] | sz53Table[this->A];
 }
 
-void Z80::oppAdc16(const uint16_t& value) {
+void Z80::adc16(const uint16_t& value) {
     uint add16temp = uint(this->HL->get()) + uint(value) + (uint(this->F) & FLAG_C);
 
     uint8_t lookup =
@@ -316,7 +305,7 @@ void Z80::oppAdc16(const uint16_t& value) {
               halfcarryAddTable[lookup & 0x07] | (this->HL->get() != 0 ? 0 : FLAG_Z);
 }
 
-void Z80::oppSub(const uint8_t& value) {
+void Z80::sub(const uint8_t& value) {
     uint16_t subtemp = static_cast<uint16_t>(this->A) - static_cast<uint16_t>(value);
 
     uint8_t lookup = ((this->A & 0x88) >> 3) | ((value & 0x88) >> 2) | static_cast<uint8_t>((subtemp & 0x88) >> 1);
@@ -327,7 +316,7 @@ void Z80::oppSub(const uint8_t& value) {
               sz53Table[this->A];
 }
 
-void Z80::oppSbc(const uint8_t& value) {
+void Z80::sbc(const uint8_t& value) {
     uint16_t sbctemp = static_cast<uint16_t>(this->A) - static_cast<uint16_t>(value) - (static_cast<uint16_t>(this->F) & FLAG_C);
     uint8_t lookup = ((this->A & 0x88) >> 3) | ((value & 0x88) >> 2) | static_cast<uint8_t>((sbctemp & 0x88) >> 1);
     this->A = static_cast<uint8_t>(sbctemp);
@@ -335,7 +324,7 @@ void Z80::oppSbc(const uint8_t& value) {
               sz53Table[this->A];
 }
 
-void Z80::oppSbc16(const uint16_t& value) { // ??
+void Z80::sbc16(const uint16_t& value) { // ??
     uint sub16temp = uint(this->HL->get()) - uint(value) - (uint(this->F) & FLAG_C);
     uint8_t lookup = static_cast<uint8_t>(((this->HL->get() & 0x8800) >> 11) | ((static_cast<uint16_t>(value) & 0x8800) >> 10) |
                                           ((static_cast<uint16_t>(sub16temp) & 0x8800) >> 9));
@@ -347,7 +336,7 @@ void Z80::oppSbc16(const uint16_t& value) { // ??
 /*
 Incrementa o conteudo do ponteiro referente ao registro
 */
-void Z80::oppInc(uint8_t* ptrValue) { // TODO merge com IncR
+void Z80::inc(uint8_t* ptrValue) { // TODO merge com IncR
     (*ptrValue)++;
     this->F = (this->F & FLAG_C) | ((*ptrValue) == 0x80 ? FLAG_V : 0) | ((*ptrValue & 0x0f) != 0 ? 0 : FLAG_H) | sz53Table[(*ptrValue)];
 }
@@ -355,7 +344,7 @@ void Z80::oppInc(uint8_t* ptrValue) { // TODO merge com IncR
 /*
 Decrementa o conteudo do ponteiro referente ao registro
 */
-void Z80::oppDec(uint8_t* ptrValue) { // TODO merge com DecR
+void Z80::dec(uint8_t* ptrValue) { // TODO merge com DecR
     this->F = (this->F & FLAG_C) | (((*ptrValue) & 0x0f) != 0 ? 0 : FLAG_H) | FLAG_N;
     (*ptrValue)--;
     this->F |= ((*ptrValue) == 0x7f ? FLAG_V : 0) | sz53Table[(*ptrValue)];
@@ -455,3 +444,54 @@ void Z80::in(uint8_t* reg, const uint16_t& port) {
 uint8_t Z80::readPort(const uint16_t& address) { return this->bus->readIo(address); }
 
 void Z80::writePort(const uint16_t& address, const uint8_t& b) { this->bus->writeIo(address, b); }
+
+uint8_t Z80::getRegisterValByte(const uint8_t& opcode) {
+    uint8_t r = opcode & 0x07;
+    switch (r) {
+        case 0:
+            return this->B;
+            break;
+        case 1:
+            return this->C;
+            break;
+        case 2:
+            return this->D;
+            break;
+        case 3:
+            return this->E;
+            break;
+        case 4:
+            return this->H;
+            break;
+        case 5:
+            return this->L;
+            break;
+        case 7:
+            return this->A;
+            break;
+    }
+
+    return 0;
+}
+
+uint8_t* Z80::getPrtRegisterValByte(const uint8_t& opcode) {
+    uint8_t r = opcode & 0x07;
+    switch (r) {
+        case 0:
+            return &this->B;
+        case 1:
+            return &this->C;
+        case 2:
+            return &this->D;
+        case 3:
+            return &this->E;
+        case 4:
+            return &this->H;
+        case 5:
+            return &this->L;
+        case 7:
+            return &this->A;
+    }
+
+    return nullptr;
+}

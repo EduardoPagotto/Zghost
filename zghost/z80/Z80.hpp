@@ -4,6 +4,16 @@
 #include "R16.hpp"
 #include <zghost/bus/Bus.hpp>
 
+#define FLAG_C 0x01
+#define FLAG_N 0x02
+#define FLAG_P 0x04
+#define FLAG_V FLAG_P
+#define FLAG_3 0x08
+#define FLAG_H 0x10
+#define FLAG_5 0x20
+#define FLAG_Z 0x40
+#define FLAG_S 0x80
+
 class Z80 {
   public:
     Z80(Bus* pBus);
@@ -36,15 +46,15 @@ class Z80 {
     void oppOr(const uint8_t& value);
     void oppCp(const uint8_t& value);
 
-    void oppAdd(const uint8_t& value);
-    void oppAdd16(R16* value1, uint16_t value2);
-    void oppAdc(const uint8_t& value);
-    void oppAdc16(const uint16_t& value);
-    void oppSub(const uint8_t& value);
-    void oppSbc(const uint8_t& value);
-    void oppSbc16(const uint16_t& value);
-    void oppInc(uint8_t* ptrValue);
-    void oppDec(uint8_t* ptrValue);
+    void add(const uint8_t& value);
+    void add16(R16* value1, const uint16_t& value2);
+    void adc(const uint8_t& value);
+    void adc16(const uint16_t& value);
+    void sub(const uint8_t& value);
+    void sbc(const uint8_t& value);
+    void sbc16(const uint16_t& value);
+    void inc(uint8_t* ptrValue);
+    void dec(uint8_t* ptrValue);
 
     uint8_t rlc(const uint8_t& val);
     uint8_t rrc(const uint8_t& val);
@@ -61,6 +71,9 @@ class Z80 {
     void in(uint8_t* reg, const uint16_t& port);
     uint8_t readPort(const uint16_t& address);
     void writePort(const uint16_t& address, const uint8_t& b);
+
+    uint8_t getRegisterValByte(const uint8_t& opcode);
+    uint8_t* getPrtRegisterValByte(const uint8_t& opcode);
 
     // private:
     uint8_t A, F, B, C, D, E, H, L;
