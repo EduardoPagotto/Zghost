@@ -11,6 +11,7 @@ class Z80 {
     void reset();
     void step();
     void interrupt();
+    void nonMaskableInterrupt();
 
     void push(const uint16_t& value);
     uint16_t pop();
@@ -25,6 +26,41 @@ class Z80 {
     void storeIndexR(R16* pReg);
     void loadIndex8(uint8_t* pValue);
     void storeIndex8(const uint8_t& value);
+
+    void call();
+    void jr();
+    void rst(const uint8_t& value);
+
+    void oppAnd(const uint8_t& value);
+    void oppXor(const uint8_t& value);
+    void oppOr(const uint8_t& value);
+    void oppCp(const uint8_t& value);
+
+    void oppAdd(const uint8_t& value);
+    void oppAdd16(R16* value1, uint16_t value2);
+    void oppAdc(const uint8_t& value);
+    void oppAdc16(const uint16_t& value);
+    void oppSub(const uint8_t& value);
+    void oppSbc(const uint8_t& value);
+    void oppSbc16(const uint16_t& value);
+    void oppInc(uint8_t* ptrValue);
+    void oppDec(uint8_t* ptrValue);
+
+    uint8_t rlc(const uint8_t& val);
+    uint8_t rrc(const uint8_t& val);
+    uint8_t rr(const uint8_t& val);
+    uint8_t rl(const uint8_t& val);
+    uint8_t sla(const uint8_t& val);
+    uint8_t sll(const uint8_t& val);
+    uint8_t sra(const uint8_t& val);
+    uint8_t srl(const uint8_t& val);
+
+    void bit(const uint8_t& bit, const uint8_t& value);
+    void biti(const uint8_t& bit, const uint8_t& value, const uint16_t& address);
+
+    void in(uint8_t* reg, const uint16_t& port);
+    uint8_t readPort(const uint16_t& address);
+    void writePort(const uint16_t& address, const uint8_t& b);
 
     // private:
     uint8_t A, F, B, C, D, E, H, L;
@@ -48,6 +84,18 @@ class Z80 {
     uint16_t rzxInstructionsOffset;
 
     Bus* bus;
+
+    uint8_t sz53Table[100];
+    uint8_t sz53pTable[100];
+    uint8_t parityTable[100];
+
+    const static uint8_t halfcarryAddTable[];
+    const static uint8_t halfcarrySubTable[];
+    const static uint8_t overflowAddTable[];
+    const static uint8_t overflowSubTable[];
+
+  private:
+    void init_table_sz53();
 };
 
 #endif
