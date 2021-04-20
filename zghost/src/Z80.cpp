@@ -495,3 +495,35 @@ uint8_t* Z80::getPrtRegisterValByte(const uint8_t& opcode) {
 
     return nullptr;
 }
+
+uint8_t Z80::getMaskBitReset(const uint8_t& opcode) {
+    uint8_t r = opcode & 0x07;
+    switch (r) {
+        case 0:
+            return 0xfe;
+            break;
+        case 1:
+            return 0xfd;
+            break;
+        case 2:
+            return 0xfb;
+            break;
+        case 3:
+            return 0xf7;
+            break;
+        case 4:
+            return 0xef;
+            break;
+        case 5:
+            return 0xdf;
+            break;
+        case 6:
+            return 0xbf;
+            break;
+        case 7:
+            return 0x7f;
+            break;
+    }
+
+    return 0x0;
+}

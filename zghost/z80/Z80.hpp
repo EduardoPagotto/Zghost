@@ -74,6 +74,7 @@ class Z80 {
 
     uint8_t getRegisterValByte(const uint8_t& opcode);
     uint8_t* getPrtRegisterValByte(const uint8_t& opcode);
+    uint8_t getMaskBitReset(const uint8_t& opcode);
 
     // private:
     uint8_t A, F, B, C, D, E, H, L;

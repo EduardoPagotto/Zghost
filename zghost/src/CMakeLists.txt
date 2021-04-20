@@ -7,7 +7,8 @@ set (SourcesCore Latch.cpp
                  Memory.cpp
                  Bus.cpp
                  Z80.cpp
-                 OpCode.cpp)
+                 OpCode.cpp
+                 OpCodeCB.cpp)
 
 # #define os includes
 set (IncludeCore ${CMAKE_SOURCE_DIR})

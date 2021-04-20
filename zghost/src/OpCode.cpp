@@ -1,4 +1,5 @@
 #include <zghost/z80/OpCode.hpp>
+#include <zghost/z80/OpCodeCB.hpp>
 
 void instr__NOP(Z80* z, const uint8_t& opcode) { z->Tstates += 4; }
 
@@ -754,12 +755,7 @@ void instr__JP_Z_NNNN(Z80* z, const uint8_t& opcode) {
 }
 
 /* shift CB */
-// void instr__SHIFT_CB(Z80* z, const uint8_t& opcode) {
-//     // z->Tstates += 4
-//     uint8_t opcode2 = z->load8();
-//     z->R++;
-//     OpcodeCBMap[opcode2](z, opcode2); //FIXME: implementar
-// }
+void instr__SHIFT_CB(Z80* z, const uint8_t& opcode) { opcodeCBStep(z, opcode); }
 
 /* CALL Z,nnnn */
 void instr__CALL_Z_NNNN(Z80* z, const uint8_t& opcode) {
@@ -1503,6 +1499,8 @@ void initOpCode() {
     // opcodemap[0xfd] = instr__SHIFT_FD;
     opcodemap[0xfe] = instr__CP_NN;
     opcodemap[0xff] = instr__RST_38;
+
+    initOpCodeCB();
 }
 
 void opcodeStep(Z80* z, const uint8_t opcode) { opcodemap[opcode](z, opcode); }
