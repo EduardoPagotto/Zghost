@@ -3,6 +3,7 @@
 
 #include "Device.hpp"
 #include <map>
+#include <string>
 
 class Bus {
   public:
