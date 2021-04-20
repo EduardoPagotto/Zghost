@@ -32,7 +32,8 @@
 			"utility": "cpp",
 			"*.tcc": "cpp",
 			"memory": "cpp",
-			"ranges": "cpp"
+			"ranges": "cpp",
+			"atomic": "cpp"
 		}
 	},
 	"launch": {

@@ -7,6 +7,9 @@ int main(int argn, char** argv) {
     Bus bus;
 
     Memory rom(0x0000, 256);
+
+    rom.load("./examples/interrup1.bin");
+
     Memory ram(0x0100, 256);
     Latch port1(0x01);
     Latch port2(0x02);
@@ -18,7 +21,9 @@ int main(int argn, char** argv) {
 
     Z80* pZ80 = new Z80(&bus);
     pZ80->reset();
-    pZ80->step();
+
+    while (true)
+        pZ80->step();
 
     // uint8_t h, l;
     // Register16* r = new Register16(&l, &h);

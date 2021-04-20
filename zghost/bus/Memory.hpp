@@ -2,6 +2,8 @@
 #define __MEMORY__HPP
 
 #include "Device.hpp"
+#include "string"
+#include "vector"
 
 class Memory : public Device {
   public:
@@ -11,8 +13,11 @@ class Memory : public Device {
     virtual bool write(const uint16_t& address, const uint8_t& value) override;
     virtual bool valid(const uint16_t& address) override;
 
+    void load(const std::string& file);
+
   private:
-    uint8_t* mem;
+    // uint8_t* mem;
+    std::vector<uint8_t> mem;
     uint16_t start;
     uint16_t top;
 };
