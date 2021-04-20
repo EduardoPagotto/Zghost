@@ -10,7 +10,8 @@ set (SourcesCore Latch.cpp
                  OpCode.cpp
                  OpCodeCB.cpp
                  OpCodeED.cpp
-                 OpCodeDD.cpp)
+                 OpCodeDD.cpp
+                 OpCodeFD.cpp)
 
 # #define os includes
 set (IncludeCore ${CMAKE_SOURCE_DIR})

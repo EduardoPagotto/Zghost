@@ -2,6 +2,7 @@
 #include <zghost/z80/OpCodeCB.hpp>
 #include <zghost/z80/OpCodeDD.hpp>
 #include <zghost/z80/OpCodeED.hpp>
+#include <zghost/z80/OpCodeFD.hpp>
 
 void instr__NOP(Z80* z, const uint8_t& opcode) { z->Tstates += 4; }
 
@@ -1196,18 +1197,8 @@ void instr__CALL_M_NNNN(Z80* z, const uint8_t& opcode) {
     }
 }
 
-// /* shift FD */
-// void instr__SHIFT_FD(Z80* z, const uint8_t& opcode) {
-// 	//z->Tstates += 4
-// 	uint8_t opcode2 = z->load8();
-// 	z->R++;
-// 	if f := OpcodeDFMap[opcode2]; f != nil {
-// 		f(z, opcode)
-// 	} else {
-// 		/* Instruction did not involve H or L */
-// 		OpcodeMap[opcode2](z, opcode2) // FIXME: verificar se é isto mesmo!!!
-// 	}
-// }
+/* shift FD */
+void instr__SHIFT_FD(Z80* z, const uint8_t& opcode) { opcodeFDStep(z, opcode); }
 
 /* CP nn */
 void instr__CP_NN(Z80* z, const uint8_t& opcode) {
@@ -1485,6 +1476,7 @@ void initOpCode() {
     initOpCodeCB();
     initOpCodeED();
     initOpCodeDD();
+    initOpCodeFD();
 }
 
 void opcodeStep(Z80* z, const uint8_t opcode) { opcodemap[opcode](z, opcode); }
