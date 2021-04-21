@@ -14,7 +14,7 @@ Console::Console() {
     bus.addIo("input", portIn);
     bus.addIo("output", portOut);
 
-    rom->load("./bin/pilha.bin");
+    rom->load("./bin/indices.bin");
 
     z80 = new Z80(&bus);
 }

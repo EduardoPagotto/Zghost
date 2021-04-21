@@ -11,12 +11,12 @@ Memory::Memory(const uint16_t& start, const uint16_t& size) {
 
 Memory::~Memory() { this->mem.clear(); }
 
-std::tuple<uint8_t, bool> Memory::read(const uint8_t& address) {
+std::tuple<uint8_t, bool> Memory::read(const uint16_t& address) {
     if ((address >= this->start) && (address < this->top)) {
         uint16_t addrFinal = address - this->start;
         return std::make_tuple(this->mem[addrFinal], true);
     }
-    return std::make_tuple(0x0, false);
+    return std::make_tuple(0xff, false);
 }
 
 bool Memory::write(const uint16_t& address, const uint8_t& value) {

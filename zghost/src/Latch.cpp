@@ -8,7 +8,7 @@ Latch::Latch(const uint16_t& address) {
 
 Latch::~Latch() {}
 
-std::tuple<uint8_t, bool> Latch::read(const uint8_t& address) {
+std::tuple<uint8_t, bool> Latch::read(const uint16_t& address) {
     if (this->address == address) {
         has_value = false;
         return std::make_tuple(this->value, true);

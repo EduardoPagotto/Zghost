@@ -7,7 +7,7 @@ class Latch : public Device {
   public:
     Latch(const uint16_t& address);
     virtual ~Latch();
-    virtual std::tuple<uint8_t, bool> read(const uint8_t& address) override;
+    virtual std::tuple<uint8_t, bool> read(const uint16_t& address) override;
     virtual bool write(const uint16_t& address, const uint8_t& value) override;
     virtual bool valid(const uint16_t& address) override;
 
@@ -19,7 +19,5 @@ class Latch : public Device {
     uint8_t value;
     bool has_value;
 };
-
-
 
 #endif

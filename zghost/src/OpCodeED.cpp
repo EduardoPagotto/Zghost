@@ -746,18 +746,7 @@ void initOpCodeED() {
 }
 
 void opcodeEDStep(Z80* z, const uint8_t opcode) {
-
-    // z->Tstates += 4
     uint8_t opcode2 = z->load8();
     z->R++;
     opcodemaped[opcode2](z, opcode2); // FIXME: implementar
-
-    // //z->Tstates += 4
-    // uint8_t = opcode2 = z->load8();
-    // z->R++;
-    // if f := OpcodeEDMap[opcode2]; f != nil { // FIXME: continuar
-    // 	f(z, opcode2)
-    // } else {
-    // 	invalidOpcode(z, opcode2)
-    // }
 }
