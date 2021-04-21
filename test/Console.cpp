@@ -4,7 +4,7 @@
 Console::Console() {
 
     rom = new Memory(0x0000, 0x0100);
-    ram = new Memory(0x0100, 0x0100);
+    ram = new Memory(0x0100, 0x0020);
 
     portIn = new Latch(0x0001);
     portOut = new Latch(0x0002);
@@ -14,7 +14,7 @@ Console::Console() {
     bus.addIo("input", portIn);
     bus.addIo("output", portOut);
 
-    rom->load("./bin/interrup1.bin");
+    rom->load("./bin/pilha.bin");
 
     z80 = new Z80(&bus);
 }

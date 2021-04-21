@@ -99,9 +99,9 @@ class Z80 {
 
     Bus* bus;
 
-    uint8_t sz53Table[100];
-    uint8_t sz53pTable[100];
-    uint8_t parityTable[100];
+    uint8_t sz53Table[256];
+    uint8_t sz53pTable[256];
+    uint8_t parityTable[256];
 
     const static uint8_t halfcarryAddTable[];
     const static uint8_t halfcarrySubTable[];
