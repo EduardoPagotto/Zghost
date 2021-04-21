@@ -17,6 +17,7 @@ Console::Console() {
     rom->load("./bin/indices.bin");
 
     z80 = new Z80(&bus);
+    z80->reset();
 }
 
 Console::~Console() {}

@@ -7,14 +7,13 @@ const uint8_t Z80::overflowAddTable[] = {0, 0, 0, FLAG_V, FLAG_V, 0, 0, 0};
 const uint8_t Z80::overflowSubTable[] = {0, FLAG_V, 0, 0, 0, 0, FLAG_V, 0};
 
 Z80::Z80(Bus* pBus) {
-    A, F, B, C, D, E, H, L = 0;
-    A_, F_, B_, C_, D_, E_, H_, L_ = 0;
-    IXH, IXL, IYH, IYL = 0;
-    I, IFF1, IFF2, IM = 0;
+    A = 0xff;
+    F = B = C = D = E = H = L = 0;
+    A_ = F_ = B_ = C_ = D_ = E_ = H_ = L_ = 0;
+    IXH = IXL = IYH = IYL = 0;
+    I = IFF1 = IFF2 = IM = 0;
 
-    R7 = 0;
-    R = 0;
-    pc = 0;
+    pc = R = R7 = 0;
     sp = 0xffff;
 
     AF = new R16(&A, &F);
@@ -22,7 +21,7 @@ Z80::Z80(Bus* pBus) {
     DE = new R16(&D, &E);
     HL = new R16(&H, &L);
     IX = new R16(&IXH, &IXL);
-    IY = new R16(&IYH, &IYH);
+    IY = new R16(&IYH, &IYL);
     AF_ = new R16(&A_, &F_);
     BC_ = new R16(&B_, &C_);
     DE_ = new R16(&D_, &E_);
@@ -58,11 +57,8 @@ void Z80::init_table_sz53() {
 }
 
 void Z80::reset() {
-    A, F, B, C, D, E, H, L = 0;
-    A_, F_, B_, C_, D_, E_, H_, L_ = 0;
-    IXH, IXL, IYH, IYL = 0;
-    sp, I, R, R7, pc, IFF1, IFF2, IM = 0;
-    Tstates = 0;
+    I, R, R7, pc, IFF1, IFF2, IM = 0;
+    Tstates += 3;
     Halted = false;
     interruptsEnabledAt = 0;
 }
