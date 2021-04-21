@@ -78,13 +78,14 @@ void Z80::step() {
 
 void Z80::interrupt() {
     if (this->IFF1 != 0) {
-        if (this->Halted) {
-            // this->pc++
-            this->Halted = false;
-        }
 
         if (this->interruptsEnabledAt + 24 > int(this->Tstates)) {
             return;
+        }
+
+        if (this->Halted) {
+            // this->pc++
+            this->Halted = false;
         }
 
         this->Tstates += 7;
@@ -222,8 +223,8 @@ void Z80::call() {
 
 void Z80::jr() {
     this->Tstates += 12;
-    uint16_t jrtemp = R16::signExtend(this->bus->readMemory(this->pc));
-    this->pc = jrtemp;
+    int16_t jrtemp = R16::signExtend(this->bus->readMemory(this->pc));
+    this->pc += jrtemp;
     this->pc++;
 }
 

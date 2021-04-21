@@ -14,7 +14,7 @@ Console::Console() {
     bus.addIo("input", portIn);
     bus.addIo("output", portOut);
 
-    rom->load("./bin/indices.bin");
+    rom->load("./bin/interrup1.bin");
 
     z80 = new Z80(&bus);
     z80->reset();
