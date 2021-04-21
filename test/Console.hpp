@@ -17,8 +17,8 @@ class Console {
     Z80* z80;
     Memory* ram;
     Memory* rom;
-    Latch* portIn;
-    Latch* portOut;
+    Latch* portA;
+    Latch* portB;
 };
 
 #endif // __CONSOLE_H__

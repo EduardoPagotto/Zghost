@@ -53,7 +53,7 @@ uint8_t Bus::readIo(const uint16_t& address) {
 
 void Bus::writeIo(const uint16_t& address, const uint8_t& value) {
     using namespace std;
-    for (auto it = mem.begin(); it != mem.end(); it++) {
+    for (auto it = io.begin(); it != io.end(); it++) {
 
         string name = it->first;
         Device* pDev = it->second;

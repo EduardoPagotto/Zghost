@@ -6,15 +6,15 @@ Console::Console() {
     rom = new Memory(0x0000, 0x0100);
     ram = new Memory(0x0100, 0x0020);
 
-    portIn = new Latch(0x0001);
-    portOut = new Latch(0x0002);
+    portA = new Latch(0x0001);
+    portB = new Latch(0x0002);
 
     bus.addMemory("rom", rom);
     bus.addMemory("ram", ram);
-    bus.addIo("input", portIn);
-    bus.addIo("output", portOut);
+    bus.addIo("portA", portA);
+    bus.addIo("portB", portB);
 
-    rom->load("./bin/interrup1.bin");
+    rom->load("./bin/indexados.bin");
 
     z80 = new Z80(&bus);
     z80->reset();
@@ -29,8 +29,10 @@ void Console::exec() {
 
         bool ok;
         uint8_t value;
-        std::tie(value, ok) = portIn->readDirect();
-        if (ok) {}
+        std::tie(value, ok) = portA->readDirect();
+        if (ok) {
+            printf("Recebido: %d\n", value);
+        }
 
         if (z80->Halted) {
             z80->interrupt();
