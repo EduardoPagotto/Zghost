@@ -72,6 +72,9 @@ class Z80 {
     uint8_t readPort(const uint16_t& address);
     void writePort(const uint16_t& address, const uint8_t& b);
 
+    uint8_t readMem(const uint16_t& address);
+    void writeMem(const uint16_t& address, const uint8_t& value);
+
     const uint8_t getRegisterValByte(const uint8_t& opcode);
     uint8_t* getPrtRegisterValByte(const uint8_t& opcode);
     uint8_t getMaskBitReset(const uint8_t& opcode);
@@ -97,8 +100,6 @@ class Z80 {
     uint16_t interruptsEnabledAt;
     uint16_t rzxInstructionsOffset;
 
-    Bus* bus;
-
     uint8_t sz53Table[256];
     uint8_t sz53pTable[256];
     uint8_t parityTable[256];
@@ -109,8 +110,8 @@ class Z80 {
     const static uint8_t overflowSubTable[];
 
   private:
-    // Bus* bus;
     void init_table_sz53();
+    Bus* bus = nullptr;
 };
 
 #endif

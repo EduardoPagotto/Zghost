@@ -14,7 +14,7 @@ void instr__LD_BC_NNNN(Z80* z, const uint8_t& opcode) {
 
 void instr__LD_iBC_A(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->bus->writeMemory(z->BC.get(), z->A);
+    z->writeMem(z->BC.get(), z->A);
 }
 
 void instr__INC_BC(Z80* z, const uint8_t& opcode) {
@@ -68,7 +68,7 @@ void instr__ADD_HL_BC(Z80* z, const uint8_t& opcode) {
 /* LD A,(BC) */
 void instr__LD_A_iBC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->A = z->bus->readMemory(z->BC.get());
+    z->A = z->readMem(z->BC.get());
 }
 
 /* DEC BC */
@@ -130,7 +130,7 @@ void instr__LD_DE_NNNN(Z80* z, const uint8_t& opcode) {
 /* LD (DE),A */
 void instr__LD_iDE_A(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->bus->writeMemory(z->DE.get(), z->A);
+    z->writeMem(z->DE.get(), z->A);
 }
 
 /* INC DE */
@@ -181,7 +181,7 @@ void instr__ADD_HL_DE(Z80* z, const uint8_t& opcode) {
 /* LD A,(DE) */
 void instr__LD_A_iDE(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->A = z->bus->readMemory(z->DE.get());
+    z->A = z->readMem(z->DE.get());
 }
 
 /* DEC DE */
@@ -385,25 +385,25 @@ void instr__INC_SP(Z80* z, const uint8_t& opcode) {
 /* INC (HL) */
 void instr__INC_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 11;
-    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    uint8_t bytetemp = z->readMem(z->HL.get());
     // z->Memory.ContendReadNoMreq(z->HL(), 1)
     z->inc(&bytetemp);
-    z->bus->writeMemory(z->HL.get(), bytetemp);
+    z->writeMem(z->HL.get(), bytetemp);
 }
 
 /* DEC (HL) */
 void instr__DEC_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 11;
-    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    uint8_t bytetemp = z->readMem(z->HL.get());
     // z->Memory.ContendReadNoMreq(z->HL(), 1)
     z->dec(&bytetemp);
-    z->bus->writeMemory(z->HL.get(), bytetemp);
+    z->writeMem(z->HL.get(), bytetemp);
 }
 
 /* LD (HL),nn */
 void instr__LD_iHL_NN(Z80* z, const uint8_t& opcode) {
     z->Tstates += 10;
-    z->bus->writeMemory(z->HL.get(), z->load8());
+    z->writeMem(z->HL.get(), z->load8());
 }
 
 /* SCF */
@@ -478,7 +478,7 @@ void instr__LD_B_r(Z80* z, const uint8_t& opcode) {
 /* LD B,(HL) */
 void instr__LD_B_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->B = z->bus->readMemory(z->HL.get());
+    z->B = z->readMem(z->HL.get());
 }
 
 /* LD C,r */
@@ -490,7 +490,7 @@ void instr__LD_C_r(Z80* z, const uint8_t& opcode) {
 /* LD C,(HL) */
 void instr__LD_C_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->C = z->bus->readMemory(z->HL.get());
+    z->C = z->readMem(z->HL.get());
 }
 
 /* LD D,r */
@@ -502,7 +502,7 @@ void instr__LD_D_r(Z80* z, const uint8_t& opcode) {
 /* LD D,(HL) */
 void instr__LD_D_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->D = z->bus->readMemory(z->HL.get());
+    z->D = z->readMem(z->HL.get());
 }
 
 /* LD E,r */
@@ -514,7 +514,7 @@ void instr__LD_E_r(Z80* z, const uint8_t& opcode) {
 /* LD E,(HL) */
 void instr__LD_E_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->E = z->bus->readMemory(z->HL.get());
+    z->E = z->readMem(z->HL.get());
 }
 
 /* LD H,r */
@@ -526,7 +526,7 @@ void instr__LD_H_r(Z80* z, const uint8_t& opcode) {
 /* LD H,(HL) */
 void instr__LD_H_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->H = z->bus->readMemory(z->HL.get());
+    z->H = z->readMem(z->HL.get());
 }
 
 /* LD L,r */
@@ -538,13 +538,13 @@ void instr__LD_L_r(Z80* z, const uint8_t& opcode) {
 /* LD L,(HL) */
 void instr__LD_L_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->L = z->bus->readMemory(z->HL.get());
+    z->L = z->readMem(z->HL.get());
 }
 
 /* LD (HL),r */
 void instr__LD_iHL_r(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->bus->writeMemory(z->HL.get(), z->getRegisterValByte(opcode));
+    z->writeMem(z->HL.get(), z->getRegisterValByte(opcode));
 }
 
 /* HALT */
@@ -563,7 +563,7 @@ void instr__LD_A_r(Z80* z, const uint8_t& opcode) {
 /* LD A,(HL) */
 void instr__LD_A_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->A = z->bus->readMemory(z->HL.get());
+    z->A = z->readMem(z->HL.get());
 }
 
 /* ADD A,r */
@@ -575,7 +575,7 @@ void instr__ADD_A_r(Z80* z, const uint8_t& opcode) {
 /* ADD A,(HL) */
 void instr__ADD_A_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->add(z->bus->readMemory(z->HL.get()));
+    z->add(z->readMem(z->HL.get()));
 }
 
 /* ADC A,r */
@@ -587,7 +587,7 @@ void instr__ADC_A_r(Z80* z, const uint8_t& opcode) {
 /* ADC A,(HL) */
 void instr__ADC_A_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 4;
-    z->adc(z->bus->readMemory(z->HL.get()));
+    z->adc(z->readMem(z->HL.get()));
 }
 
 /* SUB A,r */
@@ -599,7 +599,7 @@ void instr__SUB_A_r(Z80* z, const uint8_t& opcode) {
 /* SUB A,(HL) */
 void instr__SUB_A_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->sub(z->bus->readMemory(z->HL.get()));
+    z->sub(z->readMem(z->HL.get()));
 }
 
 /* SBC A,r */
@@ -611,7 +611,7 @@ void instr__SBC_A_r(Z80* z, const uint8_t& opcode) {
 /* SBC A,(HL) */
 void instr__SBC_A_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->sbc(z->bus->readMemory(z->HL.get()));
+    z->sbc(z->readMem(z->HL.get()));
 }
 
 /* AND A,r */
@@ -623,7 +623,7 @@ void instr__AND_A_r(Z80* z, const uint8_t& opcode) {
 /* AND A,(HL) */
 void instr__AND_A_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->oppAnd(z->bus->readMemory(z->HL.get()));
+    z->oppAnd(z->readMem(z->HL.get()));
 }
 
 /* XOR A,r */
@@ -635,7 +635,7 @@ void instr__XOR_A_r(Z80* z, const uint8_t& opcode) {
 /* XOR A,(HL) */
 void instr__XOR_A_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->oppXor(z->bus->readMemory(z->HL.get()));
+    z->oppXor(z->readMem(z->HL.get()));
 }
 
 /* OR A,r */
@@ -647,7 +647,7 @@ void instr__OR_A_r(Z80* z, const uint8_t& opcode) {
 /* OR A,(HL) */
 void instr__OR_A_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->oppOr(z->bus->readMemory(z->HL.get()));
+    z->oppOr(z->readMem(z->HL.get()));
 }
 
 /* CP r */
@@ -659,7 +659,7 @@ void instr__CP_r(Z80* z, const uint8_t& opcode) {
 /* CP (HL) */
 void instr__CP_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 7;
-    z->oppCp(z->bus->readMemory(z->HL.get()));
+    z->oppCp(z->readMem(z->HL.get()));
 }
 
 /* RET NZ */
@@ -968,11 +968,11 @@ void instr__JP_PO_NNNN(Z80* z, const uint8_t& opcode) {
 /* EX (SP),HL */
 void instr__EX_iSP_HL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 19;
-    uint16_t bytetempl = z->bus->readMemory(z->sp);
-    uint16_t bytetemph = z->bus->readMemory(z->sp + 1);
+    uint16_t bytetempl = z->readMem(z->sp);
+    uint16_t bytetemph = z->readMem(z->sp + 1);
     // z->Memory.ContendReadNoMreq(z->SP()+1, 1)
-    z->bus->writeMemory(z->sp + 1, z->H);
-    z->bus->writeMemory(z->sp, z->L);
+    z->writeMem(z->sp + 1, z->H);
+    z->writeMem(z->sp, z->L);
     // z->Memory.ContendWriteNoMreq_loop(z->SP(), 1, 2)
     z->L = bytetempl;
     z->H = bytetemph;

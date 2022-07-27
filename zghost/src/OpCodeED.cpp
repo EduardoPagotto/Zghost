@@ -200,9 +200,9 @@ void instrED__LD_iNNNN_HL(Z80* z, const uint8_t& opcode) {
 /* RRD */
 void instrED__RRD(Z80* z, const uint8_t& opcode) {
     z->Tstates += 18;
-    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    uint8_t bytetemp = z->readMem(z->HL.get());
     // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 4)
-    z->bus->writeMemory(z->HL.get(), (z->A << 4) | (bytetemp >> 4));
+    z->writeMem(z->HL.get(), (z->A << 4) | (bytetemp >> 4));
     z->A = (z->A & 0xf0) | (bytetemp & 0x0f);
     z->F = (z->F & FLAG_C) | z->sz53pTable[z->A];
 }
@@ -235,9 +235,9 @@ void instrED__LD_HL_iNNNN(Z80* z, const uint8_t& opcode) {
 /* RLD */
 void instrED__RLD(Z80* z, const uint8_t& opcode) {
     z->Tstates += 18;
-    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    uint8_t bytetemp = z->readMem(z->HL.get());
     // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 4)
-    z->bus->writeMemory(z->HL.get(), (bytetemp << 4) | (z->A & 0x0f));
+    z->writeMem(z->HL.get(), (bytetemp << 4) | (z->A & 0x0f));
     z->A = (z->A & 0xf0) | (bytetemp >> 4);
     z->F = (z->F & FLAG_C) | z->sz53pTable[z->A];
 }
@@ -270,9 +270,9 @@ void instrED__LD_iNNNN_SP(Z80* z, const uint8_t& opcode) {
     std::tie(sph, spl) = R16::splitword(z->sp);
 
     uint16_t ldtemp = z->load16();
-    z->bus->writeMemory(ldtemp, spl);
+    z->writeMem(ldtemp, spl);
     ldtemp++;
-    z->bus->writeMemory(ldtemp, sph);
+    z->writeMem(ldtemp, sph);
 }
 
 /* IN A,(C) */
@@ -298,18 +298,18 @@ void instrED__ADC_HL_SP(Z80* z, const uint8_t& opcode) {
 void instrED__LD_SP_iNNNN(Z80* z, const uint8_t& opcode) {
     z->Tstates += 20;
     uint16_t ldtemp = z->load16();
-    uint8_t spl = z->bus->readMemory(ldtemp);
+    uint8_t spl = z->readMem(ldtemp);
     ldtemp++;
-    uint8_t sph = z->bus->readMemory(ldtemp);
+    uint8_t sph = z->readMem(ldtemp);
     z->sp = R16::joinBytes(sph, spl);
 }
 
 /* LDI */
 void instrED__LDI(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    uint8_t bytetemp = z->readMem(z->HL.get());
     z->BC.dec(); // DecBC()
-    z->bus->writeMemory(z->DE.get(), bytetemp);
+    z->writeMem(z->DE.get(), bytetemp);
     // z->Memory.ContendWriteNoMreq_loop(z->DE.get(), 1, 2)
     z->DE.inc(); // IncDE()
     z->HL.inc(); // IncHL()
@@ -323,7 +323,7 @@ void instrED__LDI(Z80* z, const uint8_t& opcode) {
 /* CPI */
 void instrED__CPI(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t value = z->bus->readMemory(z->HL.get());
+    uint8_t value = z->readMem(z->HL.get());
     uint8_t bytetemp = z->A - value;
     uint8_t lookup = ((z->A & 0x08) >> 3) | (((value)&0x08) >> 2) | ((bytetemp & 0x08) >> 1);
     // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 5)
@@ -348,7 +348,7 @@ void instrED__INI(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
     uint8_t initemp = z->readPort(z->BC.get());
-    z->bus->writeMemory(z->HL.get(), initemp);
+    z->writeMem(z->HL.get(), initemp);
 
     z->B--;
     z->HL.inc(); // IncHL()
@@ -363,7 +363,7 @@ void instrED__INI(Z80* z, const uint8_t& opcode) {
 void instrED__OUTI(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
-    uint8_t outitemp = z->bus->readMemory(z->HL.get());
+    uint8_t outitemp = z->readMem(z->HL.get());
     z->B--; /* This does happen first, despite what the specs say */
     z->writePort(z->BC.get(), outitemp);
 
@@ -379,9 +379,9 @@ void instrED__OUTI(Z80* z, const uint8_t& opcode) {
 /* LDD */
 void instrED__LDD(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    uint8_t bytetemp = z->readMem(z->HL.get());
     z->BC.dec(); // DecBC()
-    z->bus->writeMemory(z->DE.get(), bytetemp);
+    z->writeMem(z->DE.get(), bytetemp);
     // z->Memory.ContendWriteNoMreq_loop(z->DE.get(), 1, 2)
     z->DE.dec(); // DecDE()
     z->HL.dec(); // DecHL()
@@ -396,7 +396,7 @@ void instrED__LDD(Z80* z, const uint8_t& opcode) {
 /* CPD */
 void instrED__CPD(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t value = z->bus->readMemory(z->HL.get());
+    uint8_t value = z->readMem(z->HL.get());
     uint8_t bytetemp = z->A - value;
     uint8_t lookup = ((z->A & 0x08) >> 3) | (((value)&0x08) >> 2) | ((bytetemp & 0x08) >> 1);
     // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 5)
@@ -420,7 +420,7 @@ void instrED__IND(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
     uint8_t initemp = z->readPort(z->BC.get());
-    z->bus->writeMemory(z->HL.get(), initemp);
+    z->writeMem(z->HL.get(), initemp);
 
     z->B--;
     z->HL.dec();
@@ -436,7 +436,7 @@ void instrED__IND(Z80* z, const uint8_t& opcode) {
 void instrED__OUTD(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
-    uint8_t outitemp = z->bus->readMemory(z->HL.get());
+    uint8_t outitemp = z->readMem(z->HL.get());
     z->B--; /* This does happen first, despite what the specs say */
     z->writePort(z->BC.get(), outitemp);
 
@@ -452,8 +452,8 @@ void instrED__OUTD(Z80* z, const uint8_t& opcode) {
 /* LDIR */
 void instrED__LDIR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
-    z->bus->writeMemory(z->DE.get(), bytetemp);
+    uint8_t bytetemp = z->readMem(z->HL.get());
+    z->writeMem(z->DE.get(), bytetemp);
     // z->Memory.ContendWriteNoMreq_loop(z->DE.get(), 1, 2)
     z->BC.dec();
     bytetemp += z->A;
@@ -475,7 +475,7 @@ void instrED__LDIR(Z80* z, const uint8_t& opcode) {
 /* CPIR */
 void instrED__CPIR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t value = z->bus->readMemory(z->HL.get());
+    uint8_t value = z->readMem(z->HL.get());
     uint8_t bytetemp = z->A - value;
     uint8_t lookup = ((z->A & 0x08) >> 3) | (((value)&0x08) >> 2) | ((bytetemp & 0x08) >> 1);
     // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 5)
@@ -506,7 +506,7 @@ void instrED__INIR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
     uint8_t initemp = z->readPort(z->BC.get());
-    z->bus->writeMemory(z->HL.get(), initemp);
+    z->writeMem(z->HL.get(), initemp);
 
     z->B--;
     uint8_t initemp2 = initemp + z->C + 1;
@@ -528,7 +528,7 @@ void instrED__INIR(Z80* z, const uint8_t& opcode) {
 void instrED__OTIR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
-    uint8_t outitemp = z->bus->readMemory(z->HL.get());
+    uint8_t outitemp = z->readMem(z->HL.get());
     z->B--; /* This does happen first, despite what the specs say */
     z->writePort(z->BC.get(), outitemp);
 
@@ -550,8 +550,8 @@ void instrED__OTIR(Z80* z, const uint8_t& opcode) {
 /* LDDR */
 void instrED__LDDR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
-    z->bus->writeMemory(z->DE.get(), bytetemp);
+    uint8_t bytetemp = z->readMem(z->HL.get());
+    z->writeMem(z->DE.get(), bytetemp);
     // z->Memory.ContendWriteNoMreq_loop(z->DE.get(), 1, 2)
     z->BC.dec();
     bytetemp += z->A;
@@ -573,7 +573,7 @@ void instrED__LDDR(Z80* z, const uint8_t& opcode) {
 /* CPDR */
 void instrED__CPDR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t value = z->bus->readMemory(z->HL.get());
+    uint8_t value = z->readMem(z->HL.get());
     uint8_t bytetemp = z->A - value;
     uint8_t lookup = ((z->A & 0x08) >> 3) | (((value)&0x08) >> 2) | ((bytetemp & 0x08) >> 1);
     // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 5)
@@ -605,7 +605,7 @@ void instrED__INDR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
     uint8_t initemp = z->readPort(z->BC.get());
-    z->bus->writeMemory(z->HL.get(), initemp);
+    z->writeMem(z->HL.get(), initemp);
 
     z->B--;
     uint8_t initemp2 = initemp + z->C - 1;
@@ -627,7 +627,7 @@ void instrED__INDR(Z80* z, const uint8_t& opcode) {
 void instrED__OTDR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
-    uint8_t outitemp = z->bus->readMemory(z->HL.get());
+    uint8_t outitemp = z->readMem(z->HL.get());
     z->B--; /* This does happen first, despite what the specs say */
     z->writePort(z->BC.get(), outitemp);
 

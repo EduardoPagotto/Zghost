@@ -6,15 +6,13 @@ const uint8_t Z80::halfcarrySubTable[] = {0, 0, FLAG_H, 0, FLAG_H, 0, FLAG_H, FL
 const uint8_t Z80::overflowAddTable[] = {0, 0, 0, FLAG_V, FLAG_V, 0, 0, 0};
 const uint8_t Z80::overflowSubTable[] = {0, FLAG_V, 0, 0, 0, 0, FLAG_V, 0};
 
-Z80::Z80(Bus* pBus) {
-    A = 0xff;
+Z80::Z80(Bus* pBus) : bus(pBus), A(0xff), sp(0xffff), pc(0x0000) {
+
     F = B = C = D = E = H = L = 0;
     A_ = F_ = B_ = C_ = D_ = E_ = H_ = L_ = 0;
     IXH = IXL = IYH = IYL = 0;
     I = IFF1 = IFF2 = IM = 0;
-
-    pc = R = R7 = 0;
-    sp = 0xffff;
+    R = R7 = 0;
 
     AF.setPtr(&A, &F);
     BC.setPtr(&B, &C);
@@ -26,8 +24,6 @@ Z80::Z80(Bus* pBus) {
     BC_.setPtr(&B_, &C_);
     DE_.setPtr(&D_, &E_);
     HL_.setPtr(&H_, &L_);
-
-    bus = pBus;
 
     this->init_table_sz53();
     initOpCode();
@@ -486,8 +482,10 @@ void Z80::in(uint8_t* reg, const uint16_t& port) {
 }
 
 uint8_t Z80::readPort(const uint16_t& address) { return this->bus->readIo(address); }
-
 void Z80::writePort(const uint16_t& address, const uint8_t& b) { this->bus->writeIo(address, b); }
+
+uint8_t Z80::readMem(const uint16_t& address) { return this->bus->readMemory(address); }
+void Z80::writeMem(const uint16_t& address, const uint8_t& value) { this->bus->writeMemory(address, value); }
 
 const uint8_t Z80::getRegisterValByte(const uint8_t& opcode) {
     uint8_t r = opcode & 0x07;
