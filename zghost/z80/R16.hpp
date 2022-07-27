@@ -18,13 +18,9 @@ class R16 {
     inline void inc() { std::tie(*this->high, *this->low) = R16::splitword(this->get() + 1); }
     inline void dec() { std::tie(*this->high, *this->low) = R16::splitword(this->get() - 1); }
 
-    inline void add(const uint8_t& val) { std::tie(*this->high, *this->low) = R16::splitword(this->get() + val); }
-
     inline static std::tuple<uint8_t, uint8_t> splitword(uint16_t w) { return std::make_tuple(w >> 8, w & 0xff); }
-
     inline static uint16_t joinBytes(const uint8_t& h, const uint8_t& l) { return static_cast<uint16_t>((h << 8) | l); }
-
-    static int16_t signExtend(const uint8_t& v) { return static_cast<int16_t>(static_cast<int8_t>(v)); }
+    inline static int16_t signExtend(const uint8_t& v) { return static_cast<int16_t>(static_cast<int8_t>(v)); }
 
   private:
     uint8_t* low;
