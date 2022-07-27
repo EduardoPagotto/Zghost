@@ -22,7 +22,7 @@ void instrED__SBC_HL_BC(Z80* z, const uint8_t& opcode) {
 /* LD (nnnn),BC */
 void instrED__LD_iNNNN_BC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 20;
-    z->storeIndexR(z->BC);
+    z->storeIndexR16(z->BC);
 }
 
 void instrED__RETI(Z80* z, const uint8_t& opcode) {
@@ -81,7 +81,7 @@ void instrED__ADC_HL_BC(Z80* z, const uint8_t& opcode) {
 /* LD BC,(nnnn) */
 void instrED__LD_BC_iNNNN(Z80* z, const uint8_t& opcode) {
     z->Tstates += 20;
-    z->loadIndexR(z->BC);
+    z->loadIndexR16(z->BC);
 }
 
 /* LD R,A */
@@ -116,7 +116,7 @@ void instrED__SBC_HL_DE(Z80* z, const uint8_t& opcode) {
 /* LD (nnnn),DE */
 void instrED__LD_iNNNN_DE(Z80* z, const uint8_t& opcode) {
     z->Tstates += 20;
-    z->storeIndexR(z->DE);
+    z->storeIndexR16(z->DE);
 }
 
 /* IM 1 */
@@ -155,7 +155,7 @@ void instrED__ADC_HL_DE(Z80* z, const uint8_t& opcode) {
 /* LD DE,(nnnn) */
 void instrED__LD_DE_iNNNN(Z80* z, const uint8_t& opcode) {
     z->Tstates += 20;
-    z->loadIndexR(z->DE);
+    z->loadIndexR16(z->DE);
 }
 
 /* IM 2 */
@@ -194,7 +194,7 @@ void instrED__SBC_HL_HL(Z80* z, const uint8_t& opcode) {
 /* LD (nnnn),HL */
 void instrED__LD_iNNNN_HL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 20;
-    z->storeIndexR(z->HL);
+    z->storeIndexR16(z->HL);
 }
 
 /* RRD */
@@ -229,7 +229,7 @@ void instrED__ADC_HL_HL(Z80* z, const uint8_t& opcode) {
 /* LD HL,(nnnn) */
 void instrED__LD_HL_iNNNN(Z80* z, const uint8_t& opcode) {
     z->Tstates += 20;
-    z->loadIndexR(z->HL);
+    z->loadIndexR16(z->HL);
 }
 
 /* RLD */

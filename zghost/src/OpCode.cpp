@@ -9,7 +9,7 @@ void instr__NOP(Z80* z, const uint8_t& opcode) { z->Tstates += 4; }
 
 void instr__LD_BC_NNNN(Z80* z, const uint8_t& opcode) {
     z->Tstates += 10;
-    z->loadR(z->BC);
+    z->loadR16(z->BC);
 }
 
 void instr__LD_iBC_A(Z80* z, const uint8_t& opcode) {
@@ -62,7 +62,7 @@ void instr__EX_AF_AF(Z80* z, const uint8_t& opcode) {
 void instr__ADD_HL_BC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 11;
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
-    z->add16(z->HL, z->BC.get());
+    z->addR16(z->HL, z->BC.get());
 }
 
 /* LD A,(BC) */
@@ -124,7 +124,7 @@ void instr__DJNZ_OFFSET(Z80* z, const uint8_t& opcode) {
 /* LD DE,nnnn */
 void instr__LD_DE_NNNN(Z80* z, const uint8_t& opcode) {
     z->Tstates += 10;
-    z->loadR(z->DE);
+    z->loadR16(z->DE);
 }
 
 /* LD (DE),A */
@@ -175,7 +175,7 @@ void instr__JR_OFFSET(Z80* z, const uint8_t& opcode) { z->jr(); }
 void instr__ADD_HL_DE(Z80* z, const uint8_t& opcode) {
     z->Tstates += 11;
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
-    z->add16(z->HL, z->DE.get());
+    z->addR16(z->HL, z->DE.get());
 }
 
 /* LD A,(DE) */
@@ -233,13 +233,13 @@ void instr__JR_NZ_OFFSET(Z80* z, const uint8_t& opcode) {
 /* LD HL,nnnn */
 void instr__LD_HL_NNNN(Z80* z, const uint8_t& opcode) {
     z->Tstates += 10;
-    z->loadR(z->HL);
+    z->loadR16(z->HL);
 }
 
 /* LD (nnnn),HL */
 void instr__LD_iNNNN_HL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    z->storeIndexR(z->HL);
+    z->storeIndexR16(z->HL);
 }
 
 /* INC HL */
@@ -309,13 +309,13 @@ void instr__JR_Z_OFFSET(Z80* z, const uint8_t& opcode) {
 void instr__ADD_HL_HL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 11;
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
-    z->add16(z->HL, z->HL.get());
+    z->addR16(z->HL, z->HL.get());
 }
 
 /* LD HL,(nnnn) */
 void instr__LD_HL_iNNNN(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    z->loadIndexR(z->HL);
+    z->loadIndexR16(z->HL);
 }
 
 /* DEC HL */
@@ -372,7 +372,7 @@ void instr__LD_SP_NNNN(Z80* z, const uint8_t& opcode) {
 // /* LD (nnnn),A */
 void instr__LD_iNNNN_A(Z80* z, const uint8_t& opcode) {
     z->Tstates += 13;
-    z->storeIndex8(z->A);
+    z->writeMem(z->load16(), z->A);
 }
 
 /* INC SP */
@@ -427,13 +427,13 @@ void instr__JR_C_OFFSET(Z80* z, const uint8_t& opcode) {
 void instr__ADD_HL_SP(Z80* z, const uint8_t& opcode) {
     z->Tstates += 11;
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
-    z->add16(z->HL, z->sp);
+    z->addR16(z->HL, z->sp);
 }
 
 /* LD A,(nnnn) */
 void instr__LD_A_iNNNN(Z80* z, const uint8_t& opcode) {
     z->Tstates += 13;
-    z->loadIndex8(&z->A);
+    z->A = z->readMem(z->load16());
 }
 
 /* DEC SP */
@@ -676,7 +676,7 @@ void instr__RET_NZ(Z80* z, const uint8_t& opcode) {
 /* POP BC */
 void instr__POP_BC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 10;
-    z->popR(z->BC);
+    z->popR16(z->BC);
 }
 
 /* JP NZ,nnnn */
@@ -713,7 +713,7 @@ void instr__CALL_NZ_NNNN(Z80* z, const uint8_t& opcode) {
 void instr__PUSH_BC(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
     z->Tstates += 11;
-    z->pushR(z->BC);
+    z->pushR16(z->BC);
 }
 
 /* ADD A,nn */
@@ -806,7 +806,7 @@ void instr__RET_NC(Z80* z, const uint8_t& opcode) {
 /* POP DE */
 void instr__POP_DE(Z80* z, const uint8_t& opcode) {
     z->Tstates += 10;
-    z->popR(z->DE);
+    z->popR16(z->DE);
 }
 
 /* JP NC,nnnn */
@@ -844,7 +844,7 @@ void instr__CALL_NC_NNNN(Z80* z, const uint8_t& opcode) {
 void instr__PUSH_DE(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
     z->Tstates += 11;
-    z->pushR(z->DE);
+    z->pushR16(z->DE);
 }
 
 /* SUB nn */
@@ -950,7 +950,7 @@ void instr__RET_PO(Z80* z, const uint8_t& opcode) {
 // /* POP HL */
 void instr__POP_HL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 10;
-    z->popR(z->HL);
+    z->popR16(z->HL);
 }
 
 /* JP PO,nnnn */
@@ -994,7 +994,7 @@ void instr__CALL_PO_NNNN(Z80* z, const uint8_t& opcode) {
 void instr__PUSH_HL(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
     z->Tstates += 11;
-    z->pushR(z->HL);
+    z->pushR16(z->HL);
 }
 
 /* AND nn */
@@ -1092,7 +1092,7 @@ void instr__RET_P(Z80* z, const uint8_t& opcode) {
 /* POP AF */
 void instr__POP_AF(Z80* z, const uint8_t& opcode) {
     z->Tstates += 10;
-    z->popR(z->AF);
+    z->popR16(z->AF);
 }
 
 /* JP P,nnnn */
@@ -1130,7 +1130,7 @@ void instr__CALL_P_NNNN(Z80* z, const uint8_t& opcode) {
 void instr__PUSH_AF(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
     z->Tstates += 11;
-    z->pushR(z->AF);
+    z->pushR16(z->AF);
 }
 
 /* OR nn */

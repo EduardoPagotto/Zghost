@@ -127,14 +127,16 @@ void Z80::nonMaskableInterrupt() {
     this->pc = 0x0066;
 }
 
-void Z80::pushR(R16& reg16) {
+// // -- Memory
+// Stack
+void Z80::pushR16(R16& reg16) {
     this->sp--;
     this->bus->writeMemory(this->sp, reg16.getHi());
     this->sp--;
     this->bus->writeMemory(this->sp, reg16.getLo());
 }
 
-void Z80::popR(R16& reg16) {
+void Z80::popR16(R16& reg16) {
     reg16.setLo(this->bus->readMemory(this->sp));
     this->sp++;
     reg16.setHi(this->bus->readMemory(this->sp));
@@ -160,11 +162,11 @@ uint16_t Z80::pop() {
     return R16::joinBytes(valHi, valLo);
 }
 
-void Z80::loadR(R16& reg16) {
-    reg16.setLo(this->bus->readMemory(this->pc));
+// PC
+uint8_t Z80::load8() {
+    uint8_t val = this->bus->readMemory(this->pc);
     this->pc++;
-    reg16.setHi(this->bus->readMemory(this->pc));
-    this->pc++;
+    return val;
 }
 
 uint16_t Z80::load16() {
@@ -175,35 +177,30 @@ uint16_t Z80::load16() {
     return ldtemp;
 }
 
-uint8_t Z80::load8() {
-    uint8_t val = this->bus->readMemory(this->pc);
+void Z80::loadR16(R16& reg16) {
+    reg16.setLo(this->bus->readMemory(this->pc));
     this->pc++;
-    return val;
+    reg16.setHi(this->bus->readMemory(this->pc));
+    this->pc++;
 }
 
-void Z80::loadIndexR(R16& reg16) {
+void Z80::loadIndexR16(R16& reg16) {
     uint16_t ldtemp = this->load16();
     reg16.setLo(this->bus->readMemory(ldtemp));
     ldtemp++;
     reg16.setHi(this->bus->readMemory(ldtemp));
 }
 
-void Z80::storeIndexR(R16& reg16) {
+void Z80::storeIndexR16(R16& reg16) {
     uint16_t ldtemp = this->load16();
     this->bus->writeMemory(ldtemp, reg16.getLo());
     ldtemp++;
     this->bus->writeMemory(ldtemp, reg16.getHi());
 }
 
-void Z80::loadIndex8(uint8_t* pValue) {
-    uint16_t ldtemp = this->load16();
-    *pValue = this->bus->readMemory(ldtemp);
-}
+uint8_t Z80::readMem(const uint16_t& address) { return this->bus->readMemory(address); }
 
-void Z80::storeIndex8(const uint8_t& value) {
-    uint16_t addr = this->load16();
-    this->bus->writeMemory(addr, value);
-}
+void Z80::writeMem(const uint16_t& address, const uint8_t& value) { this->bus->writeMemory(address, value); }
 
 // int Z80::sltTrap(const uint16_t& int16, const uint8_t& level) {
 //     // Dummy implementation
@@ -271,7 +268,7 @@ void Z80::add(const uint8_t& value) {
               sz53Table[this->A];
 }
 
-void Z80::add16(R16& value1, const uint16_t& value2) {
+void Z80::addR16(R16& value1, const uint16_t& value2) {
     uint add16temp = uint(value1.get()) + uint(value2);
 
     uint8_t lookup = static_cast<uint8_t>(((value1.get() & 0x0800) >> 11) |                  //
@@ -390,8 +387,6 @@ void Z80::dec(uint8_t* ptrValue) { // TODO merge com DecR
                sz53Table[(*ptrValue)];
 }
 
-// //-- memory
-
 // //-- bit shift
 
 uint8_t Z80::rlc(const uint8_t& val) {
@@ -476,16 +471,13 @@ void Z80::biti(const uint8_t& bit, const uint8_t& value, const uint16_t& address
 
 // //--- IO
 
-void Z80::in(uint8_t* reg, const uint16_t& port) {
-    *reg = this->readPort(port);
+void Z80::in(uint8_t* reg, const uint16_t& address) {
+    *reg = this->bus->readIo(address);
     this->F = (this->F & FLAG_C) | sz53pTable[*reg];
 }
 
 uint8_t Z80::readPort(const uint16_t& address) { return this->bus->readIo(address); }
 void Z80::writePort(const uint16_t& address, const uint8_t& b) { this->bus->writeIo(address, b); }
-
-uint8_t Z80::readMem(const uint16_t& address) { return this->bus->readMemory(address); }
-void Z80::writeMem(const uint16_t& address, const uint8_t& value) { this->bus->writeMemory(address, value); }
 
 const uint8_t Z80::getRegisterValByte(const uint8_t& opcode) {
     uint8_t r = opcode & 0x07;

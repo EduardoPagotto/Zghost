@@ -5,26 +5,26 @@
 void instrFD__ADD_REG_BC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
-    z->add16(z->IY, z->BC.get());
+    z->addR16(z->IY, z->BC.get());
 }
 
 /* ADD iy,DE */
 void instrFD__ADD_REG_DE(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
-    z->add16(z->IY, z->DE.get());
+    z->addR16(z->IY, z->DE.get());
 }
 
 /* LD iy,nnnn */
 void instrFD__LD_REG_NNNN(Z80* z, const uint8_t& opcode) {
     z->Tstates += 14;
-    z->loadR(z->IY);
+    z->loadR16(z->IY);
 }
 
 /* LD (nnnn),iy */
 void instrFD__LD_iNNNN_REG(Z80* z, const uint8_t& opcode) {
     z->Tstates += 20;
-    z->storeIndexR(z->IY);
+    z->storeIndexR16(z->IY);
 }
 
 /* INC iy */
@@ -56,13 +56,13 @@ void instrFD__LD_REGH_NN(Z80* z, const uint8_t& opcode) {
 void instrFD__ADD_REG_REG(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
-    z->add16(z->IY, z->IY.get());
+    z->addR16(z->IY, z->IY.get());
 }
 
 /* LD iy,(nnnn) */
 void instrFD__LD_REG_iNNNN(Z80* z, const uint8_t& opcode) {
     z->Tstates += 20;
-    z->loadIndexR(z->IY);
+    z->loadIndexR16(z->IY);
 }
 
 /* DEC iy */
@@ -127,7 +127,7 @@ void instrFD__LD_iREGpDD_NN(Z80* z, const uint8_t& opcode) {
 void instrFD__ADD_REG_SP(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
-    z->add16(z->IY, z->sp);
+    z->addR16(z->IY, z->sp);
 }
 
 /* LD B,IYH */
@@ -513,7 +513,7 @@ void instrFD__SHIFT_DDFDCB(Z80* z, const uint8_t& opcode) {
 /* POP iy */
 void instrFD__POP_REG(Z80* z, const uint8_t& opcode) {
     z->Tstates += 14;
-    z->popR(z->IY);
+    z->popR16(z->IY);
 }
 
 /* EX (SP),iy */
@@ -533,7 +533,7 @@ void instrFD__EX_iSP_REG(Z80* z, const uint8_t& opcode) {
 void instrFD__PUSH_REG(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
     z->Tstates += 15;
-    z->pushR(z->IY);
+    z->pushR16(z->IY);
 }
 
 /* JP iy */
