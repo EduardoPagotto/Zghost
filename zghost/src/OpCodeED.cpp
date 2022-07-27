@@ -314,8 +314,10 @@ void instrED__LDI(Z80* z, const uint8_t& opcode) {
     z->DE->inc(); // IncDE()
     z->HL->inc(); // IncHL()
     bytetemp += z->A;
-    z->F = (z->F & (FLAG_C | FLAG_Z | FLAG_S)) | (z->BC->get() != 0 ? FLAG_V : 0) | (bytetemp & FLAG_3) |
-           ((bytetemp & 0x02) != 0 ? FLAG_5 : 0);
+    z->F = (z->F & (FLAG_C | FLAG_Z | FLAG_S)) |  //
+           ((z->BC->get() != 0) ? FLAG_V : 0) |   //
+           (bytetemp & FLAG_3) |                  //
+           ((bytetemp & 0x02) != 0 ? FLAG_5 : 0); //
 }
 
 /* CPI */
@@ -327,11 +329,17 @@ void instrED__CPI(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 5)
     z->HL->inc(); // IncHL()
     z->BC->dec(); // DecBC()
-    z->F = (z->F & FLAG_C) | (z->BC->get() != 0 ? FLAG_V | FLAG_N : FLAG_N) | z->halfcarrySubTable[lookup] | (bytetemp != 0 ? 0 : FLAG_Z) |
-           (bytetemp & FLAG_S);
+
+    z->F = (z->F & FLAG_C) |                                    //
+           ((z->BC->get() != 0) ? (FLAG_V | FLAG_N) : FLAG_N) | //
+           z->halfcarrySubTable[lookup] |                       //
+           ((bytetemp != 0) ? 0 : FLAG_Z) |                     //
+           (bytetemp & FLAG_S);                                 //
+
     if ((z->F & FLAG_H) != 0) {
         bytetemp--;
     }
+
     z->F |= (bytetemp & FLAG_3) | ((bytetemp & 0x02) != 0 ? FLAG_5 : 0);
 }
 
@@ -345,8 +353,10 @@ void instrED__INI(Z80* z, const uint8_t& opcode) {
     z->B--;
     z->HL->inc(); // IncHL()
     uint8_t initemp2 = initemp + z->C + 1;
-    z->F = ((initemp & 0x80) != 0 ? FLAG_N : 0) | (initemp2 < initemp ? FLAG_H | FLAG_C : 0) |
-           (z->parityTable[(initemp2 & 0x07) ^ z->B] != 0 ? FLAG_P : 0) | z->sz53Table[z->B]; // FIXME xo problemas!!!!!
+    z->F = ((initemp & 0x80) != 0 ? FLAG_N : 0) |                         //
+           (initemp2 < initemp ? FLAG_H | FLAG_C : 0) |                   //
+           (z->parityTable[(initemp2 & 0x07) ^ z->B] != 0 ? FLAG_P : 0) | //
+           z->sz53Table[z->B];                                            // FIXME xo problemas!!!!!
 }
 
 /* OUTI */
@@ -359,8 +369,11 @@ void instrED__OUTI(Z80* z, const uint8_t& opcode) {
 
     z->HL->inc(); // IncHL()
     uint8_t outitemp2 = outitemp + z->L;
-    z->F = ((outitemp & 0x80) != 0 ? FLAG_N : 0) | (outitemp2 < outitemp ? FLAG_H | FLAG_C : 0) |
-           (z->parityTable[(outitemp2 & 0x07) ^ z->B] != 0 ? FLAG_P : 0) | z->sz53Table[z->B]; // FIXME xor problema!!!!
+
+    z->F = ((outitemp & 0x80) != 0 ? FLAG_N : 0) |                         //
+           ((outitemp2 < outitemp) ? FLAG_H | FLAG_C : 0) |                //
+           (z->parityTable[(outitemp2 & 0x07) ^ z->B] != 0 ? FLAG_P : 0) | //
+           z->sz53Table[z->B];                                             // FIXME xor problema!!!!
 }
 
 /* LDD */
@@ -373,8 +386,11 @@ void instrED__LDD(Z80* z, const uint8_t& opcode) {
     z->DE->dec(); // DecDE()
     z->HL->dec(); // DecHL()
     bytetemp += z->A;
-    z->F = (z->F & (FLAG_C | FLAG_Z | FLAG_S)) | (z->BC->get() != 0 ? FLAG_V : 0) | (bytetemp & FLAG_3) |
-           ((bytetemp & 0x02) != 0 ? FLAG_5 : 0);
+
+    z->F = (z->F & (FLAG_C | FLAG_Z | FLAG_S)) |  //
+           ((z->BC->get() != 0) ? FLAG_V : 0) |   //
+           (bytetemp & FLAG_3) |                  //
+           ((bytetemp & 0x02) != 0 ? FLAG_5 : 0); //
 }
 
 /* CPD */
@@ -386,8 +402,13 @@ void instrED__CPD(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 5)
     z->HL->dec(); // DecHL()
     z->BC->dec(); // DecBC()
-    z->F = (z->F & FLAG_C) | (z->BC->get() != 0 ? FLAG_V | FLAG_N : FLAG_N) | z->halfcarrySubTable[lookup] | (bytetemp != 0 ? 0 : FLAG_Z) |
-           (bytetemp & FLAG_S);
+
+    z->F = (z->F & FLAG_C) |                                    //
+           ((z->BC->get() != 0) ? (FLAG_V | FLAG_N) : FLAG_N) | //
+           z->halfcarrySubTable[lookup] |                       //
+           (bytetemp != 0 ? 0 : FLAG_Z) |                       //
+           (bytetemp & FLAG_S);                                 //
+
     if ((z->F & FLAG_H) != 0) {
         bytetemp--;
     }
@@ -404,8 +425,11 @@ void instrED__IND(Z80* z, const uint8_t& opcode) {
     z->B--;
     z->HL->dec();
     uint8_t initemp2 = initemp + z->C - 1;
-    z->F = ((initemp & 0x80) != 0 ? FLAG_N : 0) | (initemp2 < initemp ? FLAG_H | FLAG_C : 0) |
-           (z->parityTable[(initemp2 & 0x07) ^ z->B] != 0 ? FLAG_P : 0) | z->sz53Table[z->B]; // FIXME testar
+
+    z->F = ((initemp & 0x80) != 0 ? FLAG_N : 0) |                           //
+           ((initemp2 < initemp) ? (FLAG_H | FLAG_C) : 0) |                 //
+           ((z->parityTable[(initemp2 & 0x07) ^ z->B] != 0) ? FLAG_P : 0) | //
+           z->sz53Table[z->B];                                              // FIXME testar
 }
 
 /* OUTD */
@@ -418,8 +442,11 @@ void instrED__OUTD(Z80* z, const uint8_t& opcode) {
 
     z->HL->dec();
     uint8_t outitemp2 = outitemp + z->L;
-    z->F = ((outitemp & 0x80) != 0 ? FLAG_N : 0) | (outitemp2 < outitemp ? FLAG_H | FLAG_C : 0) |
-           (z->parityTable[(outitemp2 & 0x07) ^ z->B] != 0 ? FLAG_P : 0) | z->sz53Table[z->B];
+
+    z->F = (((outitemp & 0x80) != 0) ? FLAG_N : 0) |                         //
+           ((outitemp2 < outitemp) ? (FLAG_H | FLAG_C) : 0) |                //
+           ((z->parityTable[(outitemp2 & 0x07) ^ z->B] != 0) ? FLAG_P : 0) | //
+           z->sz53Table[z->B];
 }
 
 /* LDIR */
@@ -430,8 +457,12 @@ void instrED__LDIR(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendWriteNoMreq_loop(z->DE->get(), 1, 2)
     z->BC->dec();
     bytetemp += z->A;
-    z->F = (z->F & (FLAG_C | FLAG_Z | FLAG_S)) | (z->BC->get() != 0 ? FLAG_V : 0) | (bytetemp & FLAG_3) |
-           ((bytetemp & 0x02 != 0) ? FLAG_5 : 0);
+
+    z->F = (z->F & (FLAG_C | FLAG_Z | FLAG_S)) |    //
+           ((z->BC->get() != 0) ? FLAG_V : 0) |     //
+           (bytetemp & FLAG_3) |                    //
+           (((bytetemp & 0x02) != 0) ? FLAG_5 : 0); //
+
     if (z->BC->get() != 0) {
         // z->Memory.ContendWriteNoMreq_loop(z->DE->get(), 1, 5)
         z->pc -= 2;      // DecPC(2)
@@ -449,12 +480,19 @@ void instrED__CPIR(Z80* z, const uint8_t& opcode) {
     uint8_t lookup = ((z->A & 0x08) >> 3) | (((value)&0x08) >> 2) | ((bytetemp & 0x08) >> 1);
     // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 5)
     z->BC->dec();
-    z->F = (z->F & FLAG_C) | ((z->BC->get() != 0 ? (FLAG_V | FLAG_N) : FLAG_N)) | z->halfcarrySubTable[lookup] |
-           ((bytetemp != 0 ? 0 : FLAG_Z)) | (bytetemp & FLAG_S);
+
+    z->F = (z->F & FLAG_C) |                                      //
+           (((z->BC->get() != 0) ? (FLAG_V | FLAG_N) : FLAG_N)) | //
+           z->halfcarrySubTable[lookup] |                         //
+           (((bytetemp != 0) ? 0 : FLAG_Z)) |                     //
+           (bytetemp & FLAG_S);
+
     if ((z->F & FLAG_H) != 0) {
         bytetemp--;
     }
+
     z->F |= (bytetemp & FLAG_3) | ((bytetemp & 0x02) != 0 ? FLAG_5 : 0);
+
     if ((z->F & (FLAG_V | FLAG_Z)) == FLAG_V) {
         // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 5)
         z->pc -= 2;      // z->pc -= 2
@@ -472,8 +510,11 @@ void instrED__INIR(Z80* z, const uint8_t& opcode) {
 
     z->B--;
     uint8_t initemp2 = initemp + z->C + 1;
-    z->F = (initemp & 0x80 != 0 ? FLAG_N : 0) | (initemp2 < initemp ? FLAG_H | FLAG_C : 0) |
-           (z->parityTable[(initemp2 & 0x07) ^ z->B] != 0 ? FLAG_P : 0) | z->sz53Table[z->B];
+
+    z->F = ((initemp & 0x80) != 0 ? FLAG_N : 0) |                           //
+           ((initemp2 < initemp) ? (FLAG_H | FLAG_C) : 0) |                 //
+           ((z->parityTable[(initemp2 & 0x07) ^ z->B] != 0) ? FLAG_P : 0) | //
+           z->sz53Table[z->B];                                              //
 
     if (z->B != 0) {
         // z->Memory.ContendWriteNoMreq_loop(z->HL->get(), 1, 5)
@@ -493,8 +534,11 @@ void instrED__OTIR(Z80* z, const uint8_t& opcode) {
 
     z->HL->inc();
     uint8_t outitemp2 = outitemp + z->L;
-    z->F = ((outitemp & 0x80) != 0 ? FLAG_N : 0) | (outitemp2 < outitemp ? FLAG_H | FLAG_C : 0) |
-           (z->parityTable[(outitemp2 & 0x07) ^ z->B] != 0 ? FLAG_P : 0) | z->sz53Table[z->B]; // FIXME XOR issue
+
+    z->F = (((outitemp & 0x80) != 0) ? FLAG_N : 0) |                         //
+           ((outitemp2 < outitemp) ? (FLAG_H | FLAG_C) : 0) |                //
+           ((z->parityTable[(outitemp2 & 0x07) ^ z->B] != 0) ? FLAG_P : 0) | //
+           z->sz53Table[z->B];                                               // FIXME XOR issue
 
     if (z->B != 0) {
         // z->Memory.ContendReadNoMreq_loop(z->BC->get(), 1, 5)
@@ -511,8 +555,12 @@ void instrED__LDDR(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendWriteNoMreq_loop(z->DE->get(), 1, 2)
     z->BC->dec();
     bytetemp += z->A;
-    z->F = (z->F & (FLAG_C | FLAG_Z | FLAG_S)) | (z->BC->get() != 0 ? FLAG_V : 0) | (bytetemp & FLAG_3) |
-           ((bytetemp & 0x02 != 0) ? FLAG_5 : 0);
+
+    z->F = (z->F & (FLAG_C | FLAG_Z | FLAG_S)) |    //
+           ((z->BC->get() != 0) ? FLAG_V : 0) |     //
+           (bytetemp & FLAG_3) |                    //
+           (((bytetemp & 0x02) != 0) ? FLAG_5 : 0); //
+
     if (z->BC->get() != 0) {
         // z->Memory.ContendWriteNoMreq_loop(z->DE->get(), 1, 5)
         z->pc -= 2;
@@ -530,17 +578,25 @@ void instrED__CPDR(Z80* z, const uint8_t& opcode) {
     uint8_t lookup = ((z->A & 0x08) >> 3) | (((value)&0x08) >> 2) | ((bytetemp & 0x08) >> 1);
     // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 5)
     z->BC->dec();
-    z->F = (z->F & FLAG_C) | ((z->BC->get() != 0 ? (FLAG_V | FLAG_N) : FLAG_N)) | z->halfcarrySubTable[lookup] |
-           ((bytetemp != 0 ? 0 : FLAG_Z)) | (bytetemp & FLAG_S);
+
+    z->F = (z->F & FLAG_C) |                                      //
+           (((z->BC->get() != 0) ? (FLAG_V | FLAG_N) : FLAG_N)) | //
+           z->halfcarrySubTable[lookup] |                         //
+           (((bytetemp != 0) ? 0 : FLAG_Z)) |                     //
+           (bytetemp & FLAG_S);
+
     if ((z->F & FLAG_H) != 0) {
         bytetemp--;
     }
+
     z->F |= (bytetemp & FLAG_3) | ((bytetemp & 0x02) != 0 ? FLAG_5 : 0);
+
     if ((z->F & (FLAG_V | FLAG_Z)) == FLAG_V) {
         // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 5)
         z->pc -= 2;
         z->Tstates += 5;
     }
+
     z->HL->dec();
 }
 
@@ -553,8 +609,11 @@ void instrED__INDR(Z80* z, const uint8_t& opcode) {
 
     z->B--;
     uint8_t initemp2 = initemp + z->C - 1;
-    z->F = (initemp & 0x80 != 0 ? FLAG_N : 0) | (initemp2 < initemp ? FLAG_H | FLAG_C : 0) |
-           (z->parityTable[(initemp2 & 0x07) ^ z->B] != 0 ? FLAG_P : 0) | z->sz53Table[z->B];
+
+    z->F = ((initemp & 0x80) != 0 ? FLAG_N : 0) |                         //
+           ((initemp2 < initemp) ? FLAG_H | FLAG_C : 0) |                 //
+           (z->parityTable[(initemp2 & 0x07) ^ z->B] != 0 ? FLAG_P : 0) | //
+           z->sz53Table[z->B];                                            //
 
     if (z->B != 0) {
         // z->Memory.ContendWriteNoMreq_loop(z->HL->get(), 1, 5)
@@ -574,8 +633,11 @@ void instrED__OTDR(Z80* z, const uint8_t& opcode) {
 
     z->HL->dec();
     uint8_t outitemp2 = outitemp + z->L;
-    z->F = ((outitemp & 0x80) != 0 ? FLAG_N : 0) | (outitemp2 < outitemp ? FLAG_H | FLAG_C : 0) |
-           (z->parityTable[(outitemp2 & 0x07) ^ z->B] != 0 ? FLAG_P : 0) | z->sz53Table[z->B];
+
+    z->F = (((outitemp & 0x80) != 0) ? FLAG_N : 0) |                         //
+           ((outitemp2 < outitemp) ? (FLAG_H | FLAG_C) : 0) |                //
+           ((z->parityTable[(outitemp2 & 0x07) ^ z->B] != 0) ? FLAG_P : 0) | //
+           z->sz53Table[z->B];                                               //
 
     if (z->B != 0) {
         // z->Memory.ContendReadNoMreq_loop(z->BC->get(), 1, 5)

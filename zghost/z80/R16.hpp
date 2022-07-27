@@ -6,19 +6,14 @@
 
 class R16 {
   public:
-    R16(uint8_t* high, uint8_t* low) {
-        this->low = low;
-        this->high = high;
-    }
-
-    inline uint8_t getHi() const { return *this->high; }
-    inline uint8_t getLo() const { return *this->low; }
+    R16(uint8_t* high, uint8_t* low) : high(high), low(low) {}
+    inline const uint8_t getHi() const { return *this->high; }
+    inline const uint8_t getLo() const { return *this->low; }
+    inline const uint16_t get() const { return joinBytes(*this->high, *this->low); }
 
     inline void setHi(const uint8_t& val) { *this->high = val; }
     inline void setLo(const uint8_t& val) { *this->low = val; }
-
-    inline uint16_t get() const { return joinBytes(*this->high, *this->low); }
-    inline void set(const uint16_t& val) const { std::tie(*this->high, *this->low) = R16::splitword(val); }
+    inline void set(const uint16_t& val) { std::tie(*this->high, *this->low) = R16::splitword(val); }
 
     inline void inc() { std::tie(*this->high, *this->low) = R16::splitword(this->get() + 1); }
     inline void dec() { std::tie(*this->high, *this->low) = R16::splitword(this->get() - 1); }

@@ -4,15 +4,15 @@
 #include "R16.hpp"
 #include <zghost/bus/Bus.hpp>
 
-#define FLAG_C 0x01
-#define FLAG_N 0x02
-#define FLAG_P 0x04
+#define FLAG_C 0b00000001 // Carry Flag
+#define FLAG_N 0b00000010 // Add / Subtract Flag
+#define FLAG_P 0b00000100 // Parity / Overflow Flag
 #define FLAG_V FLAG_P
-#define FLAG_3 0x08
-#define FLAG_H 0x10
-#define FLAG_5 0x20
-#define FLAG_Z 0x40
-#define FLAG_S 0x80
+#define FLAG_3 0b00001000 // not used
+#define FLAG_H 0b00010000 // Half Carry Flag
+#define FLAG_5 0b00100000 // Not Used
+#define FLAG_Z 0b01000000 // Zero Flag
+#define FLAG_S 0b10000000 // Sign Flag
 
 class Z80 {
   public:
@@ -72,7 +72,7 @@ class Z80 {
     uint8_t readPort(const uint16_t& address);
     void writePort(const uint16_t& address, const uint8_t& b);
 
-    uint8_t getRegisterValByte(const uint8_t& opcode);
+    const uint8_t getRegisterValByte(const uint8_t& opcode);
     uint8_t* getPrtRegisterValByte(const uint8_t& opcode);
     uint8_t getMaskBitReset(const uint8_t& opcode);
 
