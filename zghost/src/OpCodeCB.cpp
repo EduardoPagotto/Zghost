@@ -10,10 +10,10 @@ void instrCB__RLC_r(Z80* z, const uint8_t& opcode) {
 /* RLC (HL) */
 void instrCB__RLC_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    // z->Memory.ContendReadNoMreq(z->HL->get(), 1)
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    // z->Memory.ContendReadNoMreq(z->HL.get(), 1)
     bytetemp = z->rlc(bytetemp);
-    z->bus->writeMemory(z->HL->get(), bytetemp);
+    z->bus->writeMemory(z->HL.get(), bytetemp);
 }
 
 /* RRC r */
@@ -26,10 +26,10 @@ void instrCB__RRC_r(Z80* z, const uint8_t& opcode) {
 /* RRC (HL) */
 void instrCB__RRC_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    // z->Memory.ContendReadNoMreq(z->HL->get(), 1)
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    // z->Memory.ContendReadNoMreq(z->HL.get(), 1)
     bytetemp = z->rrc(bytetemp);
-    z->bus->writeMemory(z->HL->get(), bytetemp);
+    z->bus->writeMemory(z->HL.get(), bytetemp);
 }
 
 /* RL r */
@@ -42,10 +42,10 @@ void instrCB__RL_r(Z80* z, const uint8_t& opcode) {
 /* RL (HL) */
 void instrCB__RL_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    // z->Memory.ContendReadNoMreq(z->HL->get(), 1)
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    // z->Memory.ContendReadNoMreq(z->HL.get(), 1)
     bytetemp = z->rl(bytetemp);
-    z->bus->writeMemory(z->HL->get(), bytetemp);
+    z->bus->writeMemory(z->HL.get(), bytetemp);
 }
 
 /* RR r */
@@ -58,10 +58,10 @@ void instrCB__RR_r(Z80* z, const uint8_t& opcode) {
 /* RR (HL) */
 void instrCB__RR_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    // z->Memory.ContendReadNoMreq(z->HL->get(), 1)
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    // z->Memory.ContendReadNoMreq(z->HL.get(), 1)
     bytetemp = z->rr(bytetemp);
-    z->bus->writeMemory(z->HL->get(), bytetemp);
+    z->bus->writeMemory(z->HL.get(), bytetemp);
 }
 
 /* SLA r */
@@ -74,10 +74,10 @@ void instrCB__SLA_r(Z80* z, const uint8_t& opcode) {
 /* SLA (HL) */
 void instrCB__SLA_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    // z->Memory.ContendReadNoMreq(z->HL->get(), 1)
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    // z->Memory.ContendReadNoMreq(z->HL.get(), 1)
     bytetemp = z->sla(bytetemp);
-    z->bus->writeMemory(z->HL->get(), bytetemp);
+    z->bus->writeMemory(z->HL.get(), bytetemp);
 }
 
 /* SRA r */
@@ -90,10 +90,10 @@ void instrCB__SRA_r(Z80* z, const uint8_t& opcode) {
 /* SRA (HL) */
 void instrCB__SRA_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    // z->Memory.ContendReadNoMreq(z->HL->get(), 1)
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    // z->Memory.ContendReadNoMreq(z->HL.get(), 1)
     bytetemp = z->sra(bytetemp);
-    z->bus->writeMemory(z->HL->get(), bytetemp);
+    z->bus->writeMemory(z->HL.get(), bytetemp);
 }
 
 /* SLL B */
@@ -106,10 +106,10 @@ void instrCB__SLL_r(Z80* z, const uint8_t& opcode) {
 /* SLL (HL) */
 void instrCB__SLL_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    // z->Memory.ContendReadNoMreq(z->HL->get(), 1)
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    // z->Memory.ContendReadNoMreq(z->HL.get(), 1)
     bytetemp = z->sll(bytetemp);
-    z->bus->writeMemory(z->HL->get(), bytetemp);
+    z->bus->writeMemory(z->HL.get(), bytetemp);
 }
 
 /* SRL r */
@@ -122,10 +122,10 @@ void instrCB__SRL_r(Z80* z, const uint8_t& opcode) {
 /* SRL (HL) */
 void instrCB__SRL_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    // z->Memory.ContendReadNoMreq(z->HL->get(), 1)
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    // z->Memory.ContendReadNoMreq(z->HL.get(), 1)
     bytetemp = z->srl(bytetemp);
-    z->bus->writeMemory(z->HL->get(), bytetemp);
+    z->bus->writeMemory(z->HL.get(), bytetemp);
 }
 
 /* BIT b,r */
@@ -140,8 +140,8 @@ void instrCB__BIT_b_r(Z80* z, const uint8_t& opcode) {
 void instrCB__BIT_b_iHL(Z80* z, const uint8_t& opcode) {
     uint8_t bitSel = (opcode & 0x38) >> 3;
     z->Tstates += 12;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    // z->Memory.ContendReadNoMreq(z->HL->get(), 1)
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    // z->Memory.ContendReadNoMreq(z->HL.get(), 1)
     z->bit(bitSel, bytetemp);
 }
 
@@ -156,11 +156,11 @@ void instrCB__RES_b_r(Z80* z, const uint8_t& opcode) {
 /* RES b,(HL) */
 void instrCB__RES_b_iHL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
     uint8_t bitSel = (opcode & 0x38) >> 3;
     uint8_t mask = z->getMaskBitReset(bitSel);
-    // z->Memory.ContendReadNoMreq(z->HL->get(), 1)
-    z->bus->writeMemory(z->HL->get(), bytetemp & mask);
+    // z->Memory.ContendReadNoMreq(z->HL.get(), 1)
+    z->bus->writeMemory(z->HL.get(), bytetemp & mask);
 }
 
 /* SET b,r */
@@ -175,11 +175,11 @@ void instrCB__SET_b_r(Z80* z, const uint8_t& opcode) {
 void instrCB__SET_b_iHL(Z80* z, const uint8_t& opcode) {
 
     z->Tstates += 15;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
     uint8_t bitSel = (opcode & 0x38) >> 3;
     uint8_t mask = !z->getMaskBitReset(bitSel);
-    // z->Memory.ContendReadNoMreq(z->HL->get(), 1)
-    z->bus->writeMemory(z->HL->get(), bytetemp | mask);
+    // z->Memory.ContendReadNoMreq(z->HL.get(), 1)
+    z->bus->writeMemory(z->HL.get(), bytetemp | mask);
 }
 
 void (*opcodemapcb[256])(Z80*, const uint8_t&);

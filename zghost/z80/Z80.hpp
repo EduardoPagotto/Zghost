@@ -25,15 +25,15 @@ class Z80 {
 
     void push(const uint16_t& value);
     uint16_t pop();
-    void pushR(R16* pReg);
-    void popR(R16* pReg);
+    void pushR(R16& reg16);
+    void popR(R16& reg16);
 
-    void loadR(R16* pReg);
+    void loadR(R16& pReg);
     uint16_t load16();
     uint8_t load8();
 
-    void loadIndexR(R16* pReg);
-    void storeIndexR(R16* pReg);
+    void loadIndexR(R16& reg16);
+    void storeIndexR(R16& reg16);
     void loadIndex8(uint8_t* pValue);
     void storeIndex8(const uint8_t& value);
 
@@ -47,7 +47,7 @@ class Z80 {
     void oppCp(const uint8_t& value);
 
     void add(const uint8_t& value);
-    void add16(R16* value1, const uint16_t& value2);
+    void add16(R16& value1, const uint16_t& value2);
     void adc(const uint8_t& value);
     void adc16(const uint16_t& value);
     void sub(const uint8_t& value);
@@ -88,9 +88,9 @@ class Z80 {
     uint16_t pc;
     uint16_t sp;
 
-    R16 *AF, *BC, *DE, *HL;
-    R16 *IX, *IY;
-    R16 *AF_, *BC_, *DE_, *HL_;
+    R16 AF, BC, DE, HL;
+    R16 IX, IY;
+    R16 AF_, BC_, DE_, HL_;
 
     bool Halted;
     uint16_t Tstates;
@@ -109,6 +109,7 @@ class Z80 {
     const static uint8_t overflowSubTable[];
 
   private:
+    // Bus* bus;
     void init_table_sz53();
 };
 

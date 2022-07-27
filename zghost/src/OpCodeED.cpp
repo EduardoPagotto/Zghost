@@ -3,20 +3,20 @@
 /* IN B,(C) */
 void instrED__IN_B_iC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->in(&z->B, z->BC->get());
+    z->in(&z->B, z->BC.get());
 }
 
 /* OUT (C),B */
 void instrED__OUT_iC_B(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->writePort(z->BC->get(), z->B);
+    z->writePort(z->BC.get(), z->B);
 }
 
 /* SBC HL,BC */
 void instrED__SBC_HL_BC(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
     z->Tstates += 15;
-    z->sbc16(z->BC->get());
+    z->sbc16(z->BC.get());
 }
 
 /* LD (nnnn),BC */
@@ -62,20 +62,20 @@ void instrED__LD_I_A(Z80* z, const uint8_t& opcode) {
 /* IN C,(C) */
 void instrED__IN_C_iC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->in(&z->C, z->BC->get());
+    z->in(&z->C, z->BC.get());
 }
 
 /* OUT (C),C */
 void instrED__OUT_iC_C(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->writePort(z->BC->get(), z->C);
+    z->writePort(z->BC.get(), z->C);
 }
 
 /* ADC HL,BC */
 void instrED__ADC_HL_BC(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
     z->Tstates += 15;
-    z->adc16(z->BC->get());
+    z->adc16(z->BC.get());
 }
 
 /* LD BC,(nnnn) */
@@ -97,20 +97,20 @@ void instrED__LD_R_A(Z80* z, const uint8_t& opcode) {
 /* IN D,(C) */
 void instrED__IN_D_iC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->in(&z->D, z->BC->get());
+    z->in(&z->D, z->BC.get());
 }
 
 /* OUT (C),D */
 void instrED__OUT_iC_D(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->writePort(z->BC->get(), z->D);
+    z->writePort(z->BC.get(), z->D);
 }
 
 /* SBC HL,DE */
 void instrED__SBC_HL_DE(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
     z->Tstates += 15;
-    z->sbc16(z->DE->get());
+    z->sbc16(z->DE.get());
 }
 
 /* LD (nnnn),DE */
@@ -136,20 +136,20 @@ void instrED__LD_A_I(Z80* z, const uint8_t& opcode) {
 /* IN E,(C) */
 void instrED__IN_E_iC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->in(&z->E, z->BC->get());
+    z->in(&z->E, z->BC.get());
 }
 
 /* OUT (C),E */
 void instrED__OUT_iC_E(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->writePort(z->BC->get(), z->E);
+    z->writePort(z->BC.get(), z->E);
 }
 
 /* ADC HL,DE */
 void instrED__ADC_HL_DE(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
     z->Tstates += 15;
-    z->adc16(z->DE->get());
+    z->adc16(z->DE.get());
 }
 
 /* LD DE,(nnnn) */
@@ -175,20 +175,20 @@ void instrED__LD_A_R(Z80* z, const uint8_t& opcode) {
 /* IN H,(C) */
 void instrED__IN_H_iC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->in(&z->H, z->BC->get());
+    z->in(&z->H, z->BC.get());
 }
 
 /* OUT (C),H */
 void instrED__OUT_iC_H(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->writePort(z->BC->get(), z->H);
+    z->writePort(z->BC.get(), z->H);
 }
 
 /* SBC HL,HL */
 void instrED__SBC_HL_HL(Z80* z, const uint8_t& opcode) {
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
     z->Tstates += 15;
-    z->sbc16(z->HL->get());
+    z->sbc16(z->HL.get());
 }
 
 /* LD (nnnn),HL */
@@ -200,9 +200,9 @@ void instrED__LD_iNNNN_HL(Z80* z, const uint8_t& opcode) {
 /* RRD */
 void instrED__RRD(Z80* z, const uint8_t& opcode) {
     z->Tstates += 18;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 4)
-    z->bus->writeMemory(z->HL->get(), (z->A << 4) | (bytetemp >> 4));
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 4)
+    z->bus->writeMemory(z->HL.get(), (z->A << 4) | (bytetemp >> 4));
     z->A = (z->A & 0xf0) | (bytetemp & 0x0f);
     z->F = (z->F & FLAG_C) | z->sz53pTable[z->A];
 }
@@ -210,20 +210,20 @@ void instrED__RRD(Z80* z, const uint8_t& opcode) {
 /* IN L,(C) */
 void instrED__IN_L_iC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->in(&z->L, z->BC->get());
+    z->in(&z->L, z->BC.get());
 }
 
 /* OUT (C),L */
 void instrED__OUT_iC_L(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->writePort(z->BC->get(), z->L);
+    z->writePort(z->BC.get(), z->L);
 }
 
 /* ADC HL,HL */
 void instrED__ADC_HL_HL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 15;
     // z->Memory.ContendReadNoMreq_loop(z->IR(), 1, 7)
-    z->adc16(z->HL->get());
+    z->adc16(z->HL.get());
 }
 
 /* LD HL,(nnnn) */
@@ -235,9 +235,9 @@ void instrED__LD_HL_iNNNN(Z80* z, const uint8_t& opcode) {
 /* RLD */
 void instrED__RLD(Z80* z, const uint8_t& opcode) {
     z->Tstates += 18;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 4)
-    z->bus->writeMemory(z->HL->get(), (bytetemp << 4) | (z->A & 0x0f));
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 4)
+    z->bus->writeMemory(z->HL.get(), (bytetemp << 4) | (z->A & 0x0f));
     z->A = (z->A & 0xf0) | (bytetemp >> 4);
     z->F = (z->F & FLAG_C) | z->sz53pTable[z->A];
 }
@@ -246,13 +246,13 @@ void instrED__RLD(Z80* z, const uint8_t& opcode) {
 void instrED__IN_F_iC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
     uint8_t bytetemp;
-    z->in(&bytetemp, z->BC->get()); // FIXME nao entendi!!!
+    z->in(&bytetemp, z->BC.get()); // FIXME nao entendi!!!
 }
 
 /* OUT (C),0 */
 void instrED__OUT_iC_0(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->writePort(z->BC->get(), 0);
+    z->writePort(z->BC.get(), 0);
 }
 
 /* SBC HL,SP */
@@ -278,13 +278,13 @@ void instrED__LD_iNNNN_SP(Z80* z, const uint8_t& opcode) {
 /* IN A,(C) */
 void instrED__IN_A_iC(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->in(&z->A, z->BC->get());
+    z->in(&z->A, z->BC.get());
 }
 
 /* OUT (C),A */
 void instrED__OUT_iC_A(Z80* z, const uint8_t& opcode) {
     z->Tstates += 12;
-    z->writePort(z->BC->get(), z->A);
+    z->writePort(z->BC.get(), z->A);
 }
 
 /* ADC HL,SP */
@@ -307,15 +307,15 @@ void instrED__LD_SP_iNNNN(Z80* z, const uint8_t& opcode) {
 /* LDI */
 void instrED__LDI(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    z->BC->dec(); // DecBC()
-    z->bus->writeMemory(z->DE->get(), bytetemp);
-    // z->Memory.ContendWriteNoMreq_loop(z->DE->get(), 1, 2)
-    z->DE->inc(); // IncDE()
-    z->HL->inc(); // IncHL()
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    z->BC.dec(); // DecBC()
+    z->bus->writeMemory(z->DE.get(), bytetemp);
+    // z->Memory.ContendWriteNoMreq_loop(z->DE.get(), 1, 2)
+    z->DE.inc(); // IncDE()
+    z->HL.inc(); // IncHL()
     bytetemp += z->A;
     z->F = (z->F & (FLAG_C | FLAG_Z | FLAG_S)) |  //
-           ((z->BC->get() != 0) ? FLAG_V : 0) |   //
+           ((z->BC.get() != 0) ? FLAG_V : 0) |    //
            (bytetemp & FLAG_3) |                  //
            ((bytetemp & 0x02) != 0 ? FLAG_5 : 0); //
 }
@@ -323,18 +323,18 @@ void instrED__LDI(Z80* z, const uint8_t& opcode) {
 /* CPI */
 void instrED__CPI(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t value = z->bus->readMemory(z->HL->get());
+    uint8_t value = z->bus->readMemory(z->HL.get());
     uint8_t bytetemp = z->A - value;
     uint8_t lookup = ((z->A & 0x08) >> 3) | (((value)&0x08) >> 2) | ((bytetemp & 0x08) >> 1);
-    // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 5)
-    z->HL->inc(); // IncHL()
-    z->BC->dec(); // DecBC()
+    // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 5)
+    z->HL.inc(); // IncHL()
+    z->BC.dec(); // DecBC()
 
-    z->F = (z->F & FLAG_C) |                                    //
-           ((z->BC->get() != 0) ? (FLAG_V | FLAG_N) : FLAG_N) | //
-           z->halfcarrySubTable[lookup] |                       //
-           ((bytetemp != 0) ? 0 : FLAG_Z) |                     //
-           (bytetemp & FLAG_S);                                 //
+    z->F = (z->F & FLAG_C) |                                   //
+           ((z->BC.get() != 0) ? (FLAG_V | FLAG_N) : FLAG_N) | //
+           z->halfcarrySubTable[lookup] |                      //
+           ((bytetemp != 0) ? 0 : FLAG_Z) |                    //
+           (bytetemp & FLAG_S);                                //
 
     if ((z->F & FLAG_H) != 0) {
         bytetemp--;
@@ -347,11 +347,11 @@ void instrED__CPI(Z80* z, const uint8_t& opcode) {
 void instrED__INI(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
-    uint8_t initemp = z->readPort(z->BC->get());
-    z->bus->writeMemory(z->HL->get(), initemp);
+    uint8_t initemp = z->readPort(z->BC.get());
+    z->bus->writeMemory(z->HL.get(), initemp);
 
     z->B--;
-    z->HL->inc(); // IncHL()
+    z->HL.inc(); // IncHL()
     uint8_t initemp2 = initemp + z->C + 1;
     z->F = ((initemp & 0x80) != 0 ? FLAG_N : 0) |                         //
            (initemp2 < initemp ? FLAG_H | FLAG_C : 0) |                   //
@@ -363,11 +363,11 @@ void instrED__INI(Z80* z, const uint8_t& opcode) {
 void instrED__OUTI(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
-    uint8_t outitemp = z->bus->readMemory(z->HL->get());
+    uint8_t outitemp = z->bus->readMemory(z->HL.get());
     z->B--; /* This does happen first, despite what the specs say */
-    z->writePort(z->BC->get(), outitemp);
+    z->writePort(z->BC.get(), outitemp);
 
-    z->HL->inc(); // IncHL()
+    z->HL.inc(); // IncHL()
     uint8_t outitemp2 = outitemp + z->L;
 
     z->F = ((outitemp & 0x80) != 0 ? FLAG_N : 0) |                         //
@@ -379,16 +379,16 @@ void instrED__OUTI(Z80* z, const uint8_t& opcode) {
 /* LDD */
 void instrED__LDD(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    z->BC->dec(); // DecBC()
-    z->bus->writeMemory(z->DE->get(), bytetemp);
-    // z->Memory.ContendWriteNoMreq_loop(z->DE->get(), 1, 2)
-    z->DE->dec(); // DecDE()
-    z->HL->dec(); // DecHL()
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    z->BC.dec(); // DecBC()
+    z->bus->writeMemory(z->DE.get(), bytetemp);
+    // z->Memory.ContendWriteNoMreq_loop(z->DE.get(), 1, 2)
+    z->DE.dec(); // DecDE()
+    z->HL.dec(); // DecHL()
     bytetemp += z->A;
 
     z->F = (z->F & (FLAG_C | FLAG_Z | FLAG_S)) |  //
-           ((z->BC->get() != 0) ? FLAG_V : 0) |   //
+           ((z->BC.get() != 0) ? FLAG_V : 0) |    //
            (bytetemp & FLAG_3) |                  //
            ((bytetemp & 0x02) != 0 ? FLAG_5 : 0); //
 }
@@ -396,18 +396,18 @@ void instrED__LDD(Z80* z, const uint8_t& opcode) {
 /* CPD */
 void instrED__CPD(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t value = z->bus->readMemory(z->HL->get());
+    uint8_t value = z->bus->readMemory(z->HL.get());
     uint8_t bytetemp = z->A - value;
     uint8_t lookup = ((z->A & 0x08) >> 3) | (((value)&0x08) >> 2) | ((bytetemp & 0x08) >> 1);
-    // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 5)
-    z->HL->dec(); // DecHL()
-    z->BC->dec(); // DecBC()
+    // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 5)
+    z->HL.dec(); // DecHL()
+    z->BC.dec(); // DecBC()
 
-    z->F = (z->F & FLAG_C) |                                    //
-           ((z->BC->get() != 0) ? (FLAG_V | FLAG_N) : FLAG_N) | //
-           z->halfcarrySubTable[lookup] |                       //
-           (bytetemp != 0 ? 0 : FLAG_Z) |                       //
-           (bytetemp & FLAG_S);                                 //
+    z->F = (z->F & FLAG_C) |                                   //
+           ((z->BC.get() != 0) ? (FLAG_V | FLAG_N) : FLAG_N) | //
+           z->halfcarrySubTable[lookup] |                      //
+           (bytetemp != 0 ? 0 : FLAG_Z) |                      //
+           (bytetemp & FLAG_S);                                //
 
     if ((z->F & FLAG_H) != 0) {
         bytetemp--;
@@ -419,11 +419,11 @@ void instrED__CPD(Z80* z, const uint8_t& opcode) {
 void instrED__IND(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
-    uint8_t initemp = z->readPort(z->BC->get());
-    z->bus->writeMemory(z->HL->get(), initemp);
+    uint8_t initemp = z->readPort(z->BC.get());
+    z->bus->writeMemory(z->HL.get(), initemp);
 
     z->B--;
-    z->HL->dec();
+    z->HL.dec();
     uint8_t initemp2 = initemp + z->C - 1;
 
     z->F = ((initemp & 0x80) != 0 ? FLAG_N : 0) |                           //
@@ -436,11 +436,11 @@ void instrED__IND(Z80* z, const uint8_t& opcode) {
 void instrED__OUTD(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
-    uint8_t outitemp = z->bus->readMemory(z->HL->get());
+    uint8_t outitemp = z->bus->readMemory(z->HL.get());
     z->B--; /* This does happen first, despite what the specs say */
-    z->writePort(z->BC->get(), outitemp);
+    z->writePort(z->BC.get(), outitemp);
 
-    z->HL->dec();
+    z->HL.dec();
     uint8_t outitemp2 = outitemp + z->L;
 
     z->F = (((outitemp & 0x80) != 0) ? FLAG_N : 0) |                         //
@@ -452,39 +452,39 @@ void instrED__OUTD(Z80* z, const uint8_t& opcode) {
 /* LDIR */
 void instrED__LDIR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    z->bus->writeMemory(z->DE->get(), bytetemp);
-    // z->Memory.ContendWriteNoMreq_loop(z->DE->get(), 1, 2)
-    z->BC->dec();
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    z->bus->writeMemory(z->DE.get(), bytetemp);
+    // z->Memory.ContendWriteNoMreq_loop(z->DE.get(), 1, 2)
+    z->BC.dec();
     bytetemp += z->A;
 
     z->F = (z->F & (FLAG_C | FLAG_Z | FLAG_S)) |    //
-           ((z->BC->get() != 0) ? FLAG_V : 0) |     //
+           ((z->BC.get() != 0) ? FLAG_V : 0) |      //
            (bytetemp & FLAG_3) |                    //
            (((bytetemp & 0x02) != 0) ? FLAG_5 : 0); //
 
-    if (z->BC->get() != 0) {
-        // z->Memory.ContendWriteNoMreq_loop(z->DE->get(), 1, 5)
+    if (z->BC.get() != 0) {
+        // z->Memory.ContendWriteNoMreq_loop(z->DE.get(), 1, 5)
         z->pc -= 2;      // DecPC(2)
         z->Tstates += 5; // FIXME: Testar
     }
-    z->HL->inc();
-    z->DE->inc();
+    z->HL.inc();
+    z->DE.inc();
 }
 
 /* CPIR */
 void instrED__CPIR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t value = z->bus->readMemory(z->HL->get());
+    uint8_t value = z->bus->readMemory(z->HL.get());
     uint8_t bytetemp = z->A - value;
     uint8_t lookup = ((z->A & 0x08) >> 3) | (((value)&0x08) >> 2) | ((bytetemp & 0x08) >> 1);
-    // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 5)
-    z->BC->dec();
+    // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 5)
+    z->BC.dec();
 
-    z->F = (z->F & FLAG_C) |                                      //
-           (((z->BC->get() != 0) ? (FLAG_V | FLAG_N) : FLAG_N)) | //
-           z->halfcarrySubTable[lookup] |                         //
-           (((bytetemp != 0) ? 0 : FLAG_Z)) |                     //
+    z->F = (z->F & FLAG_C) |                                     //
+           (((z->BC.get() != 0) ? (FLAG_V | FLAG_N) : FLAG_N)) | //
+           z->halfcarrySubTable[lookup] |                        //
+           (((bytetemp != 0) ? 0 : FLAG_Z)) |                    //
            (bytetemp & FLAG_S);
 
     if ((z->F & FLAG_H) != 0) {
@@ -494,19 +494,19 @@ void instrED__CPIR(Z80* z, const uint8_t& opcode) {
     z->F |= (bytetemp & FLAG_3) | ((bytetemp & 0x02) != 0 ? FLAG_5 : 0);
 
     if ((z->F & (FLAG_V | FLAG_Z)) == FLAG_V) {
-        // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 5)
+        // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 5)
         z->pc -= 2;      // z->pc -= 2
         z->Tstates += 5; // Testar
     }
-    z->HL->inc(); // FIXME: testar
+    z->HL.inc(); // FIXME: testar
 }
 
 /* INIR */
 void instrED__INIR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
-    uint8_t initemp = z->readPort(z->BC->get());
-    z->bus->writeMemory(z->HL->get(), initemp);
+    uint8_t initemp = z->readPort(z->BC.get());
+    z->bus->writeMemory(z->HL.get(), initemp);
 
     z->B--;
     uint8_t initemp2 = initemp + z->C + 1;
@@ -517,22 +517,22 @@ void instrED__INIR(Z80* z, const uint8_t& opcode) {
            z->sz53Table[z->B];                                              //
 
     if (z->B != 0) {
-        // z->Memory.ContendWriteNoMreq_loop(z->HL->get(), 1, 5)
+        // z->Memory.ContendWriteNoMreq_loop(z->HL.get(), 1, 5)
         z->pc -= 2;
         z->Tstates += 5;
     }
-    z->HL->inc();
+    z->HL.inc();
 }
 
 /* OTIR */
 void instrED__OTIR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
-    uint8_t outitemp = z->bus->readMemory(z->HL->get());
+    uint8_t outitemp = z->bus->readMemory(z->HL.get());
     z->B--; /* This does happen first, despite what the specs say */
-    z->writePort(z->BC->get(), outitemp);
+    z->writePort(z->BC.get(), outitemp);
 
-    z->HL->inc();
+    z->HL.inc();
     uint8_t outitemp2 = outitemp + z->L;
 
     z->F = (((outitemp & 0x80) != 0) ? FLAG_N : 0) |                         //
@@ -541,7 +541,7 @@ void instrED__OTIR(Z80* z, const uint8_t& opcode) {
            z->sz53Table[z->B];                                               // FIXME XOR issue
 
     if (z->B != 0) {
-        // z->Memory.ContendReadNoMreq_loop(z->BC->get(), 1, 5)
+        // z->Memory.ContendReadNoMreq_loop(z->BC.get(), 1, 5)
         z->pc -= 2;
         z->Tstates += 5;
     }
@@ -550,39 +550,39 @@ void instrED__OTIR(Z80* z, const uint8_t& opcode) {
 /* LDDR */
 void instrED__LDDR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t bytetemp = z->bus->readMemory(z->HL->get());
-    z->bus->writeMemory(z->DE->get(), bytetemp);
-    // z->Memory.ContendWriteNoMreq_loop(z->DE->get(), 1, 2)
-    z->BC->dec();
+    uint8_t bytetemp = z->bus->readMemory(z->HL.get());
+    z->bus->writeMemory(z->DE.get(), bytetemp);
+    // z->Memory.ContendWriteNoMreq_loop(z->DE.get(), 1, 2)
+    z->BC.dec();
     bytetemp += z->A;
 
     z->F = (z->F & (FLAG_C | FLAG_Z | FLAG_S)) |    //
-           ((z->BC->get() != 0) ? FLAG_V : 0) |     //
+           ((z->BC.get() != 0) ? FLAG_V : 0) |      //
            (bytetemp & FLAG_3) |                    //
            (((bytetemp & 0x02) != 0) ? FLAG_5 : 0); //
 
-    if (z->BC->get() != 0) {
-        // z->Memory.ContendWriteNoMreq_loop(z->DE->get(), 1, 5)
+    if (z->BC.get() != 0) {
+        // z->Memory.ContendWriteNoMreq_loop(z->DE.get(), 1, 5)
         z->pc -= 2;
         z->Tstates += 5;
     }
-    z->HL->dec();
-    z->DE->dec();
+    z->HL.dec();
+    z->DE.dec();
 }
 
 /* CPDR */
 void instrED__CPDR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
-    uint8_t value = z->bus->readMemory(z->HL->get());
+    uint8_t value = z->bus->readMemory(z->HL.get());
     uint8_t bytetemp = z->A - value;
     uint8_t lookup = ((z->A & 0x08) >> 3) | (((value)&0x08) >> 2) | ((bytetemp & 0x08) >> 1);
-    // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 5)
-    z->BC->dec();
+    // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 5)
+    z->BC.dec();
 
-    z->F = (z->F & FLAG_C) |                                      //
-           (((z->BC->get() != 0) ? (FLAG_V | FLAG_N) : FLAG_N)) | //
-           z->halfcarrySubTable[lookup] |                         //
-           (((bytetemp != 0) ? 0 : FLAG_Z)) |                     //
+    z->F = (z->F & FLAG_C) |                                     //
+           (((z->BC.get() != 0) ? (FLAG_V | FLAG_N) : FLAG_N)) | //
+           z->halfcarrySubTable[lookup] |                        //
+           (((bytetemp != 0) ? 0 : FLAG_Z)) |                    //
            (bytetemp & FLAG_S);
 
     if ((z->F & FLAG_H) != 0) {
@@ -592,20 +592,20 @@ void instrED__CPDR(Z80* z, const uint8_t& opcode) {
     z->F |= (bytetemp & FLAG_3) | ((bytetemp & 0x02) != 0 ? FLAG_5 : 0);
 
     if ((z->F & (FLAG_V | FLAG_Z)) == FLAG_V) {
-        // z->Memory.ContendReadNoMreq_loop(z->HL->get(), 1, 5)
+        // z->Memory.ContendReadNoMreq_loop(z->HL.get(), 1, 5)
         z->pc -= 2;
         z->Tstates += 5;
     }
 
-    z->HL->dec();
+    z->HL.dec();
 }
 
 /* INDR */
 void instrED__INDR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
-    uint8_t initemp = z->readPort(z->BC->get());
-    z->bus->writeMemory(z->HL->get(), initemp);
+    uint8_t initemp = z->readPort(z->BC.get());
+    z->bus->writeMemory(z->HL.get(), initemp);
 
     z->B--;
     uint8_t initemp2 = initemp + z->C - 1;
@@ -616,22 +616,22 @@ void instrED__INDR(Z80* z, const uint8_t& opcode) {
            z->sz53Table[z->B];                                            //
 
     if (z->B != 0) {
-        // z->Memory.ContendWriteNoMreq_loop(z->HL->get(), 1, 5)
+        // z->Memory.ContendWriteNoMreq_loop(z->HL.get(), 1, 5)
         z->pc -= 2;
         z->Tstates += 5;
     }
-    z->HL->dec();
+    z->HL.dec();
 }
 
 /* OTDR */
 void instrED__OTDR(Z80* z, const uint8_t& opcode) {
     z->Tstates += 16;
     // z->Memory.ContendReadNoMreq(z->IR(), 1)
-    uint8_t outitemp = z->bus->readMemory(z->HL->get());
+    uint8_t outitemp = z->bus->readMemory(z->HL.get());
     z->B--; /* This does happen first, despite what the specs say */
-    z->writePort(z->BC->get(), outitemp);
+    z->writePort(z->BC.get(), outitemp);
 
-    z->HL->dec();
+    z->HL.dec();
     uint8_t outitemp2 = outitemp + z->L;
 
     z->F = (((outitemp & 0x80) != 0) ? FLAG_N : 0) |                         //
@@ -640,7 +640,7 @@ void instrED__OTDR(Z80* z, const uint8_t& opcode) {
            z->sz53Table[z->B];                                               //
 
     if (z->B != 0) {
-        // z->Memory.ContendReadNoMreq_loop(z->BC->get(), 1, 5)
+        // z->Memory.ContendReadNoMreq_loop(z->BC.get(), 1, 5)
         z->pc -= 2;
         z->Tstates += 5;
     }
@@ -649,7 +649,7 @@ void instrED__OTDR(Z80* z, const uint8_t& opcode) {
 /* slttrap */
 // void instrED__SLTTRAP(Z80* z, const uint8_t& opcode) {
 //     z->Tstates += 4; //????
-//     z->sltTrap(int16(z->HL->get()), z->A);
+//     z->sltTrap(int16(z->HL.get()), z->A);
 // }
 
 void (*opcodemaped[256])(Z80*, const uint8_t&);

@@ -6,7 +6,11 @@
 
 class R16 {
   public:
-    R16(uint8_t* high, uint8_t* low) : high(high), low(low) {}
+    R16() = default;
+    void setPtr(uint8_t* high, uint8_t* low) {
+        this->high = high;
+        this->low = low;
+    }
     inline const uint8_t getHi() const { return *this->high; }
     inline const uint8_t getLo() const { return *this->low; }
     inline const uint16_t get() const { return joinBytes(*this->high, *this->low); }
@@ -23,8 +27,8 @@ class R16 {
     inline static int16_t signExtend(const uint8_t& v) { return static_cast<int16_t>(static_cast<int8_t>(v)); }
 
   private:
-    uint8_t* low;
-    uint8_t* high;
+    uint8_t* low = nullptr;
+    uint8_t* high = nullptr;
 };
 
 #endif

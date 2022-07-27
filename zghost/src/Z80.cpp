@@ -16,16 +16,16 @@ Z80::Z80(Bus* pBus) {
     pc = R = R7 = 0;
     sp = 0xffff;
 
-    AF = new R16(&A, &F);
-    BC = new R16(&B, &C);
-    DE = new R16(&D, &E);
-    HL = new R16(&H, &L);
-    IX = new R16(&IXH, &IXL);
-    IY = new R16(&IYH, &IYL);
-    AF_ = new R16(&A_, &F_);
-    BC_ = new R16(&B_, &C_);
-    DE_ = new R16(&D_, &E_);
-    HL_ = new R16(&H_, &L_);
+    AF.setPtr(&A, &F);
+    BC.setPtr(&B, &C);
+    DE.setPtr(&D, &E);
+    HL.setPtr(&H, &L);
+    IX.setPtr(&IXH, &IXL);
+    IY.setPtr(&IYH, &IYL);
+    AF_.setPtr(&A_, &F_);
+    BC_.setPtr(&B_, &C_);
+    DE_.setPtr(&D_, &E_);
+    HL_.setPtr(&H_, &L_);
 
     bus = pBus;
 
@@ -131,17 +131,17 @@ void Z80::nonMaskableInterrupt() {
     this->pc = 0x0066;
 }
 
-void Z80::pushR(R16* pReg) {
+void Z80::pushR(R16& reg16) {
     this->sp--;
-    this->bus->writeMemory(this->sp, pReg->getHi());
+    this->bus->writeMemory(this->sp, reg16.getHi());
     this->sp--;
-    this->bus->writeMemory(this->sp, pReg->getLo());
+    this->bus->writeMemory(this->sp, reg16.getLo());
 }
 
-void Z80::popR(R16* pReg) {
-    pReg->setLo(this->bus->readMemory(this->sp));
+void Z80::popR(R16& reg16) {
+    reg16.setLo(this->bus->readMemory(this->sp));
     this->sp++;
-    pReg->setHi(this->bus->readMemory(this->sp));
+    reg16.setHi(this->bus->readMemory(this->sp));
     this->sp++;
 }
 
@@ -164,10 +164,10 @@ uint16_t Z80::pop() {
     return R16::joinBytes(valHi, valLo);
 }
 
-void Z80::loadR(R16* pReg) {
-    pReg->setLo(this->bus->readMemory(this->pc));
+void Z80::loadR(R16& reg16) {
+    reg16.setLo(this->bus->readMemory(this->pc));
     this->pc++;
-    pReg->setHi(this->bus->readMemory(this->pc));
+    reg16.setHi(this->bus->readMemory(this->pc));
     this->pc++;
 }
 
@@ -185,18 +185,18 @@ uint8_t Z80::load8() {
     return val;
 }
 
-void Z80::loadIndexR(R16* pReg) {
+void Z80::loadIndexR(R16& reg16) {
     uint16_t ldtemp = this->load16();
-    pReg->setLo(this->bus->readMemory(ldtemp));
+    reg16.setLo(this->bus->readMemory(ldtemp));
     ldtemp++;
-    pReg->setHi(this->bus->readMemory(ldtemp));
+    reg16.setHi(this->bus->readMemory(ldtemp));
 }
 
-void Z80::storeIndexR(R16* pReg) {
+void Z80::storeIndexR(R16& reg16) {
     uint16_t ldtemp = this->load16();
-    this->bus->writeMemory(ldtemp, pReg->getLo());
+    this->bus->writeMemory(ldtemp, reg16.getLo());
     ldtemp++;
-    this->bus->writeMemory(ldtemp, pReg->getHi());
+    this->bus->writeMemory(ldtemp, reg16.getHi());
 }
 
 void Z80::loadIndex8(uint8_t* pValue) {
@@ -275,14 +275,14 @@ void Z80::add(const uint8_t& value) {
               sz53Table[this->A];
 }
 
-void Z80::add16(R16* value1, const uint16_t& value2) {
-    uint add16temp = uint(value1->get()) + uint(value2);
+void Z80::add16(R16& value1, const uint16_t& value2) {
+    uint add16temp = uint(value1.get()) + uint(value2);
 
-    uint8_t lookup = static_cast<uint8_t>(((value1->get() & 0x0800) >> 11) |                 //
+    uint8_t lookup = static_cast<uint8_t>(((value1.get() & 0x0800) >> 11) |                  //
                                           ((value2 & 0x0800) >> 10) |                        //
                                           (static_cast<uint16_t>(add16temp) & 0x0800) >> 9); //
 
-    value1->set(static_cast<uint16_t>(add16temp));
+    value1.set(static_cast<uint16_t>(add16temp));
 
     this->F = (this->F & (FLAG_V | FLAG_Z | FLAG_S)) |                     //
               ((add16temp & 0x10000) != 0 ? FLAG_C : 0) |                  //
@@ -306,19 +306,19 @@ void Z80::adc(const uint8_t& value) {
 }
 
 void Z80::adc16(const uint16_t& value) {
-    uint add16temp = uint(this->HL->get()) + uint(value) + (uint(this->F) & FLAG_C);
+    uint add16temp = uint(this->HL.get()) + uint(value) + (uint(this->F) & FLAG_C);
 
-    uint8_t lookup = static_cast<uint8_t>(((uint(this->HL->get()) & 0x8800) >> 11) | //
-                                          ((uint(value) & 0x8800) >> 10) |           //
-                                          (add16temp & 0x8800) >> 9);                //
+    uint8_t lookup = static_cast<uint8_t>(((uint(this->HL.get()) & 0x8800) >> 11) | //
+                                          ((uint(value) & 0x8800) >> 10) |          //
+                                          (add16temp & 0x8800) >> 9);               //
 
-    this->HL->set(static_cast<uint16_t>(add16temp));
+    this->HL.set(static_cast<uint16_t>(add16temp));
 
     this->F = ((uint(add16temp) & 0x10000) != 0 ? FLAG_C : 0) | //
               overflowAddTable[lookup >> 4] |                   //
               (this->H & (FLAG_3 | FLAG_5 | FLAG_S)) |          //
               halfcarryAddTable[lookup & 0x07] |                //
-              (this->HL->get() != 0 ? 0 : FLAG_Z);              //
+              (this->HL.get() != 0 ? 0 : FLAG_Z);               //
 }
 
 void Z80::sub(const uint8_t& value) {
@@ -352,20 +352,20 @@ void Z80::sbc(const uint8_t& value) {
 }
 
 void Z80::sbc16(const uint16_t& value) { // ??
-    uint sub16temp = uint(this->HL->get()) - uint(value) - (uint(this->F) & FLAG_C);
+    uint sub16temp = uint(this->HL.get()) - uint(value) - (uint(this->F) & FLAG_C);
 
-    uint8_t lookup = static_cast<uint8_t>(((this->HL->get() & 0x8800) >> 11) |                 //
+    uint8_t lookup = static_cast<uint8_t>(((this->HL.get() & 0x8800) >> 11) |                  //
                                           ((static_cast<uint16_t>(value) & 0x8800) >> 10) |    //
                                           ((static_cast<uint16_t>(sub16temp) & 0x8800) >> 9)); //
 
-    this->HL->set(static_cast<uint16_t>(sub16temp));
+    this->HL.set(static_cast<uint16_t>(sub16temp));
 
     this->F = ((sub16temp & 0x10000) != 0 ? FLAG_C : 0) | //
               FLAG_N |                                    //
               overflowSubTable[lookup >> 4] |             //
               (this->H & (FLAG_3 | FLAG_5 | FLAG_S)) |    //
               halfcarrySubTable[lookup & 0x07] |          //
-              (this->HL->get() != 0 ? 0 : FLAG_Z);
+              (this->HL.get() != 0 ? 0 : FLAG_Z);
 }
 
 /*
