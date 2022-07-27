@@ -6,7 +6,7 @@ const uint8_t Z80::halfcarrySubTable[] = {0, 0, FLAG_H, 0, FLAG_H, 0, FLAG_H, FL
 const uint8_t Z80::overflowAddTable[] = {0, 0, 0, FLAG_V, FLAG_V, 0, 0, 0};
 const uint8_t Z80::overflowSubTable[] = {0, FLAG_V, 0, 0, 0, 0, FLAG_V, 0};
 
-Z80::Z80(Bus* pBus) : bus(pBus), A(0xff), sp(0xffff), pc(0x0000) {
+Z80::Z80(Bus* pBus) : bus(pBus), A(0xff), sp(0xffff), pc(0x0000), null_val(0) {
 
     F = B = C = D = E = H = L = 0;
     A_ = F_ = B_ = C_ = D_ = E_ = H_ = L_ = 0;
@@ -364,27 +364,27 @@ void Z80::sbc16(const uint16_t& value) { // ??
 /*
 Incrementa o conteudo do ponteiro referente ao registro
 */
-void Z80::inc(uint8_t* ptrValue) { // TODO merge com IncR
-    (*ptrValue)++;
-    this->F = (this->F & FLAG_C) |                     //
-              ((*ptrValue) == 0x80 ? FLAG_V : 0) |     //
-              ((*ptrValue & 0x0f) != 0 ? 0 : FLAG_H) | //
-              sz53Table[(*ptrValue)];                  //
+void Z80::inc(uint8_t& value) { // TODO merge com IncR // FIXME: aqui consigo saber o que e sz53Table!!!!
+    value++;
+    this->F = (this->F & FLAG_C) |                 //
+              (value == 0x80 ? FLAG_V : 0) |       //
+              ((value & 0x0f) != 0 ? 0 : FLAG_H) | //
+              sz53Table[value];                    //
 }
 
 /*
 Decrementa o conteudo do ponteiro referente ao registro
 */
-void Z80::dec(uint8_t* ptrValue) { // TODO merge com DecR
+void Z80::dec(uint8_t& value) { // TODO merge com DecR
 
-    this->F = (this->F & FLAG_C) |                       //
-              (((*ptrValue) & 0x0f) != 0 ? 0 : FLAG_H) | //
-              FLAG_N;                                    //
+    this->F = (this->F & FLAG_C) |                 //
+              ((value & 0x0f) != 0 ? 0 : FLAG_H) | //
+              FLAG_N;                              //
 
-    (*ptrValue)--;
+    value--;
 
-    this->F |= ((*ptrValue) == 0x7f ? FLAG_V : 0) | //
-               sz53Table[(*ptrValue)];
+    this->F |= (value == 0x7f ? FLAG_V : 0) | //
+               sz53Table[value];
 }
 
 // //-- bit shift
@@ -479,7 +479,7 @@ void Z80::in(uint8_t* reg, const uint16_t& address) {
 uint8_t Z80::readPort(const uint16_t& address) { return this->bus->readIo(address); }
 void Z80::writePort(const uint16_t& address, const uint8_t& b) { this->bus->writeIo(address, b); }
 
-const uint8_t Z80::getRegisterValByte(const uint8_t& opcode) {
+const uint8_t Z80::getRegVal(const uint8_t& opcode) {
     uint8_t r = opcode & 0x07;
     switch (r) {
         case 0:
@@ -508,26 +508,26 @@ const uint8_t Z80::getRegisterValByte(const uint8_t& opcode) {
     return 0;
 }
 
-uint8_t* Z80::getPrtRegisterValByte(const uint8_t& opcode) {
+uint8_t& Z80::getRegRef(const uint8_t& opcode) {
     uint8_t r = opcode & 0x07;
     switch (r) {
         case 0:
-            return &this->B;
+            return this->B;
         case 1:
-            return &this->C;
+            return this->C;
         case 2:
-            return &this->D;
+            return this->D;
         case 3:
-            return &this->E;
+            return this->E;
         case 4:
-            return &this->H;
+            return this->H;
         case 5:
-            return &this->L;
+            return this->L;
         case 7:
-            return &this->A;
+            return this->A;
     }
 
-    return nullptr;
+    return getNull();
 }
 
 uint8_t Z80::getMaskBitReset(const uint8_t& opcode) {

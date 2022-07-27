@@ -37,13 +37,13 @@ void instrFD__INC_REG(Z80* z, const uint8_t& opcode) {
 /* INC IYH */
 void instrFD__INC_REGH(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    z->inc(&z->IYH);
+    z->inc(z->IYH);
 }
 
 /* DEC IYH */
 void instrFD__DEC_REGH(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    z->dec(&z->IYH); // decIYH()
+    z->dec(z->IYH); // decIYH()
 }
 
 /* LD IYH,nn */
@@ -75,13 +75,13 @@ void instrFD__DEC_REG(Z80* z, const uint8_t& opcode) {
 /* INC IYL */
 void instrFD__INC_REGL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    z->inc(&z->IYL); // incIYL()
+    z->inc(z->IYL); // incIYL()
 }
 
 /* DEC IYL */
 void instrFD__DEC_REGL(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    z->dec(&z->IYL); // decIYL()
+    z->dec(z->IYL); // decIYL()
 }
 
 /* LD IYL,nn */
@@ -98,7 +98,7 @@ void instrFD__INC_iREGpDD(Z80* z, const uint8_t& opcode) {
     uint16_t wordtemp = z->IY.get() + static_cast<uint16_t>(R16::signExtend(offset));
     uint8_t bytetemp = z->readMem(wordtemp);
     // z->Memory.ContendReadNoMreq(wordtemp, 1)
-    z->inc(&bytetemp);
+    z->inc(bytetemp);
     z->writeMem(wordtemp, bytetemp);
 }
 
@@ -110,7 +110,7 @@ void instrFD__DEC_iREGpDD(Z80* z, const uint8_t& opcode) {
     uint16_t wordtemp = z->IY.get() + static_cast<uint16_t>(R16::signExtend(offset));
     uint8_t bytetemp = z->readMem(wordtemp);
     // z->Memory.ContendReadNoMreq(wordtemp, 1)
-    z->dec(&bytetemp);
+    z->dec(bytetemp);
     z->writeMem(wordtemp, bytetemp);
 }
 
@@ -309,8 +309,8 @@ void instrFD__LD_iREGpDD_r(Z80* z, const uint8_t& opcode) {
     z->Tstates += 19;
     uint8_t offset = z->load8();
     // z->Memory.ContendReadNoMreq_loop(z->pc, 1, 5)
-    uint8_t* reg = z->getPrtRegisterValByte(opcode);
-    z->writeMem(z->IY.get() + static_cast<uint16_t>(R16::signExtend(offset)), *reg);
+    uint8_t& reg = z->getRegRef(opcode);
+    z->writeMem(z->IY.get() + static_cast<uint16_t>(R16::signExtend(offset)), reg);
 }
 
 /* LD A,IYH */

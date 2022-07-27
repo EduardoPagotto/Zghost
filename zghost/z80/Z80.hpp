@@ -50,8 +50,8 @@ class Z80 {
     void sub(const uint8_t& value);
     void sbc(const uint8_t& value);
     void sbc16(const uint16_t& value);
-    void inc(uint8_t* ptrValue);
-    void dec(uint8_t* ptrValue);
+    void inc(uint8_t& value);
+    void dec(uint8_t& value);
 
     uint8_t rlc(const uint8_t& val);
     uint8_t rrc(const uint8_t& val);
@@ -73,9 +73,11 @@ class Z80 {
     uint8_t readMem(const uint16_t& address);
     void writeMem(const uint16_t& address, const uint8_t& value);
 
-    const uint8_t getRegisterValByte(const uint8_t& opcode);
-    uint8_t* getPrtRegisterValByte(const uint8_t& opcode);
+    const uint8_t getRegVal(const uint8_t& opcode);
+    uint8_t& getRegRef(const uint8_t& opcode);
     uint8_t getMaskBitReset(const uint8_t& opcode);
+
+    uint8_t& getNull() { return null_val; }
 
     // private:
     uint8_t A, F, B, C, D, E, H, L;
@@ -110,6 +112,7 @@ class Z80 {
   private:
     void init_table_sz53();
     Bus* bus = nullptr;
+    uint8_t null_val = 0;
 };
 
 #endif

@@ -3,8 +3,8 @@
 /* RLC r */
 void instrCB__RLC_r(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    uint8_t* reg = z->getPrtRegisterValByte(opcode);
-    *reg = z->rlc(*reg);
+    uint8_t& reg = z->getRegRef(opcode);
+    reg = z->rlc(reg);
 }
 
 /* RLC (HL) */
@@ -19,8 +19,8 @@ void instrCB__RLC_iHL(Z80* z, const uint8_t& opcode) {
 /* RRC r */
 void instrCB__RRC_r(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    uint8_t* reg = z->getPrtRegisterValByte(opcode);
-    *reg = z->rrc(*reg);
+    uint8_t& reg = z->getRegRef(opcode);
+    reg = z->rrc(reg);
 }
 
 /* RRC (HL) */
@@ -35,8 +35,8 @@ void instrCB__RRC_iHL(Z80* z, const uint8_t& opcode) {
 /* RL r */
 void instrCB__RL_r(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    uint8_t* reg = z->getPrtRegisterValByte(opcode);
-    *reg = z->rl(*reg);
+    uint8_t& reg = z->getRegRef(opcode);
+    reg = z->rl(reg);
 }
 
 /* RL (HL) */
@@ -51,8 +51,8 @@ void instrCB__RL_iHL(Z80* z, const uint8_t& opcode) {
 /* RR r */
 void instrCB__RR_r(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    uint8_t* reg = z->getPrtRegisterValByte(opcode);
-    *reg = z->rr(*reg);
+    uint8_t& reg = z->getRegRef(opcode);
+    reg = z->rr(reg);
 }
 
 /* RR (HL) */
@@ -67,8 +67,8 @@ void instrCB__RR_iHL(Z80* z, const uint8_t& opcode) {
 /* SLA r */
 void instrCB__SLA_r(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    uint8_t* reg = z->getPrtRegisterValByte(opcode);
-    *reg = z->sla(*reg);
+    uint8_t& reg = z->getRegRef(opcode);
+    reg = z->sla(reg);
 }
 
 /* SLA (HL) */
@@ -83,8 +83,8 @@ void instrCB__SLA_iHL(Z80* z, const uint8_t& opcode) {
 /* SRA r */
 void instrCB__SRA_r(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    uint8_t* reg = z->getPrtRegisterValByte(opcode);
-    *reg = z->sra(*reg);
+    uint8_t& reg = z->getRegRef(opcode);
+    reg = z->sra(reg);
 }
 
 /* SRA (HL) */
@@ -99,8 +99,8 @@ void instrCB__SRA_iHL(Z80* z, const uint8_t& opcode) {
 /* SLL B */
 void instrCB__SLL_r(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    uint8_t* reg = z->getPrtRegisterValByte(opcode);
-    *reg = z->sll(*reg);
+    uint8_t& reg = z->getRegRef(opcode);
+    reg = z->sll(reg);
 }
 
 /* SLL (HL) */
@@ -115,8 +115,8 @@ void instrCB__SLL_iHL(Z80* z, const uint8_t& opcode) {
 /* SRL r */
 void instrCB__SRL_r(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    uint8_t* reg = z->getPrtRegisterValByte(opcode);
-    *reg = z->srl(*reg);
+    uint8_t& reg = z->getRegRef(opcode);
+    reg = z->srl(reg);
 }
 
 /* SRL (HL) */
@@ -130,10 +130,10 @@ void instrCB__SRL_iHL(Z80* z, const uint8_t& opcode) {
 
 /* BIT b,r */
 void instrCB__BIT_b_r(Z80* z, const uint8_t& opcode) {
-    uint8_t* reg = z->getPrtRegisterValByte(opcode);
+    uint8_t& reg = z->getRegRef(opcode);
     uint8_t bitSel = (opcode & 0x38) >> 3;
     z->Tstates += 8;
-    z->bit(bitSel, *reg);
+    z->bit(bitSel, reg);
 }
 
 /* BIT b,(HL) */
@@ -148,9 +148,9 @@ void instrCB__BIT_b_iHL(Z80* z, const uint8_t& opcode) {
 /* RES b,n */
 void instrCB__RES_b_r(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    uint8_t* reg = z->getPrtRegisterValByte(opcode);
+    uint8_t& reg = z->getRegRef(opcode);
     uint8_t bitSel = (opcode & 0x38) >> 3;
-    *reg &= z->getMaskBitReset(bitSel);
+    reg &= z->getMaskBitReset(bitSel);
 }
 
 /* RES b,(HL) */
@@ -166,9 +166,9 @@ void instrCB__RES_b_iHL(Z80* z, const uint8_t& opcode) {
 /* SET b,r */
 void instrCB__SET_b_r(Z80* z, const uint8_t& opcode) {
     z->Tstates += 8;
-    uint8_t* reg = z->getPrtRegisterValByte(opcode);
+    uint8_t& reg = z->getRegRef(opcode);
     uint8_t bitSel = (opcode & 0x38) >> 3;
-    *reg |= !z->getMaskBitReset(bitSel); // FIXME not!!!
+    reg |= !z->getMaskBitReset(bitSel); // FIXME not!!!
 }
 
 /* SET b,(HL) */

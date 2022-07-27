@@ -5,11 +5,11 @@ void instrDDCB__LD_r_RLC_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& 
 
     z->Tstates += 15; // FIXME ??
 
-    uint8_t* pReg = z->getPrtRegisterValByte(opcode);
-    (*pReg) = z->readMem(address);
+    uint8_t& reg = z->getRegRef(opcode);
+    reg = z->readMem(address);
     // z->Memory.ContendReadNoMreq(address, 1)
-    (*pReg) = z->rlc((*pReg));
-    z->writeMem(address, (*pReg));
+    reg = z->rlc(reg);
+    z->writeMem(address, reg);
 }
 
 /* RLC (REGISTER+dd) */
@@ -28,11 +28,11 @@ void instrDDCB__LD_r_RRC_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& 
 
     z->Tstates += 15; // FIXME ??
 
-    uint8_t* pReg = z->getPrtRegisterValByte(opcode);
-    (*pReg) = z->readMem(address);
+    uint8_t& reg = z->getRegRef(opcode);
+    reg = z->readMem(address);
     // z->Memory.ContendReadNoMreq(address, 1)
-    (*pReg) = z->rrc((*pReg));
-    z->writeMem(address, (*pReg));
+    reg = z->rrc(reg);
+    z->writeMem(address, reg);
 }
 
 /* RRC (REGISTER+dd) */
@@ -50,12 +50,12 @@ void instrDDCB__RRC_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& addre
 void instrDDCB__LD_r_RL_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& address) {
 
     z->Tstates += 15; // FIXME ??
-    uint8_t* pReg = z->getPrtRegisterValByte(opcode);
+    uint8_t& reg = z->getRegRef(opcode);
 
-    (*pReg) = z->readMem(address);
+    reg = z->readMem(address);
     // z->Memory.ContendReadNoMreq(address, 1)
-    (*pReg) = z->rl((*pReg));
-    z->writeMem(address, (*pReg));
+    reg = z->rl(reg);
+    z->writeMem(address, reg);
 }
 
 /* RL (REGISTER+dd) */
@@ -73,12 +73,12 @@ void instrDDCB__RL_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& addres
 void instrDDCB__LD_r_RR_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& address) {
 
     z->Tstates += 15; // FIXME ??
-    uint8_t* pReg = z->getPrtRegisterValByte(opcode);
+    uint8_t& reg = z->getRegRef(opcode);
 
-    (*pReg) = z->readMem(address);
+    reg = z->readMem(address);
     // z->Memory.ContendReadNoMreq(address, 1)
-    (*pReg) = z->rr((*pReg));
-    z->writeMem(address, (*pReg));
+    reg = z->rr(reg);
+    z->writeMem(address, reg);
 }
 
 /* RR (REGISTER+dd) */
@@ -96,12 +96,12 @@ void instrDDCB__RR_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& addres
 void instrDDCB__LD_r_SLA_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& address) {
 
     z->Tstates += 15; // FIXME ??
-    uint8_t* pReg = z->getPrtRegisterValByte(opcode);
+    uint8_t& reg = z->getRegRef(opcode);
 
-    (*pReg) = z->readMem(address);
+    reg = z->readMem(address);
     // z->Memory.ContendReadNoMreq(address, 1)
-    (*pReg) = z->sla((*pReg));
-    z->writeMem(address, (*pReg));
+    reg = z->sla(reg);
+    z->writeMem(address, reg);
 }
 
 /* SLA (REGISTER+dd) */
@@ -119,12 +119,12 @@ void instrDDCB__SLA_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& addre
 void instrDDCB__LD_r_SRA_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& address) {
 
     z->Tstates += 15; // FIXME ??
-    uint8_t* pReg = z->getPrtRegisterValByte(opcode);
+    uint8_t& reg = z->getRegRef(opcode);
 
-    (*pReg) = z->readMem(address);
+    reg = z->readMem(address);
     // z->Memory.ContendReadNoMreq(address, 1)
-    (*pReg) = z->sra((*pReg));
-    z->writeMem(address, (*pReg));
+    reg = z->sra(reg);
+    z->writeMem(address, reg);
 }
 
 /* SRA (REGISTER+dd) */
@@ -142,12 +142,12 @@ void instrDDCB__SRA_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& addre
 void instrDDCB__LD_r_SLL_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& address) {
 
     z->Tstates += 15; // FIXME ??
-    uint8_t* pReg = z->getPrtRegisterValByte(opcode);
+    uint8_t& reg = z->getRegRef(opcode);
 
-    (*pReg) = z->readMem(address);
+    reg = z->readMem(address);
     // z->Memory.ContendReadNoMreq(address, 1)
-    (*pReg) = z->sll((*pReg));
-    z->writeMem(address, (*pReg));
+    reg = z->sll(reg);
+    z->writeMem(address, reg);
 }
 
 /* SLL (REGISTER+dd) */
@@ -165,12 +165,12 @@ void instrDDCB__SLL_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& addre
 void instrDDCB__LD_r_SRL_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& address) {
 
     z->Tstates += 15; // FIXME ??
-    uint8_t* pReg = z->getPrtRegisterValByte(opcode);
+    uint8_t& reg = z->getRegRef(opcode);
 
-    (*pReg) = z->readMem(address);
+    reg = z->readMem(address);
     // z->Memory.ContendReadNoMreq(address, 1)
-    (*pReg) = z->srl((*pReg));
-    z->writeMem(address, (*pReg));
+    reg = z->srl(reg);
+    z->writeMem(address, reg);
 }
 
 /* SRL (REGISTER+dd) */
@@ -268,15 +268,15 @@ void instrDDCB__BIT_7_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& add
 void instrDDCB__LD_r_RES_b_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& address) {
 
     z->Tstates += 15; // FIXME ??
-    uint8_t* pReg = z->getPrtRegisterValByte(opcode);
+    uint8_t& reg = z->getRegRef(opcode);
 
     uint8_t offset = (opcode >> 4) & 0x07;
     uint8_t mask = z->getMaskBitReset(offset);
 
-    (*pReg) = z->readMem(address) & mask; //  0xfe, 0xfd, 0xfb, 0xf7, 0xef, 0xdf, 0xbf, 0x7f
+    reg = z->readMem(address) & mask; //  0xfe, 0xfd, 0xfb, 0xf7, 0xef, 0xdf, 0xbf, 0x7f
 
     // z->Memory.ContendReadNoMreq(address, 1)
-    z->writeMem(address, (*pReg));
+    z->writeMem(address, reg);
 }
 
 /* RES 0,(REGISTER+dd) */
@@ -339,14 +339,14 @@ void instrDDCB__RES_7_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& add
 void instrDDCB__LD_r_SET_b_iREGpDD(Z80* z, const uint8_t& opcode, const uint16_t& address) {
 
     z->Tstates += 15; // FIXME ??
-    uint8_t* pReg = z->getPrtRegisterValByte(opcode);
+    uint8_t& reg = z->getRegRef(opcode);
 
     uint8_t offset = (opcode >> 4) & 0x07;
     uint8_t mask = !z->getMaskBitReset(offset);
 
-    (*pReg) = z->readMem(address) | mask;
+    reg = z->readMem(address) | mask;
     // z->Memory.ContendReadNoMreq(address, 1)
-    z->writeMem(address, (*pReg));
+    z->writeMem(address, reg);
 }
 
 /* SET 0,(REGISTER+dd) */
