@@ -5,6 +5,7 @@
 		}
 	],
 	"settings": {
+		"editor.tabSize": 8,
 		"editor.minimap.enabled": false,
 		"cmake.configureOnOpen": true,
 		"C_Cpp.intelliSenseEngineFallback": "Enabled",

@@ -1,43 +1,41 @@
-;===========================================================
-; Teste de pilha
-;
-; Autor : Eduardo Pagotto
-; Data: 2020-04-13 
-;
-;===========================================================
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; TESTE DE PILHA
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-ram:            equ     0100h   ; Inicio da ram, cfg em Console.TotROM
-top:            equ     0120h   ; Fim da ram, cfg em Console.TotROM + Connsole.SizeRAM
+RAM:    EQU 0100H  ; INICIO DA RAM, CFG EM CONSOLE.TOTROM
+TOP:    EQU 0120H  ; FIM DA RAM, CFG EM CONSOLE.TOTROM + CONNSOLE.SIZERAM
 
-org             0x0000
-                ld      sp,top
-                ld      a,0xaa
-                ld      bc,0x0123
-                ld      de,0x4567
-                ld      hl,0x89AB
-                ld      ix,0xCDEF
-                ld      iy,0xFF00
-                push    af
-                push    bc
-                push    de
-                push    hl
-                push    ix
-                push    iy
-                call    vaievolta
-                pop     iy
-                pop     ix
-                pop     hl
-                pop     de
-                pop     bc
-                pop     af
-                nop
-                halt
-vaievolta:
-                ld      a,0xff
-                ld      bc,0xffff
-                ld      de,0xffff
-                ld      hl,0xffff
-                ld      ix,0xffff
-                ld      iy,0xffff
-                ret
-end.
+        ORG 0X0000
+        LD SP,TOP
+        LD A,0XAA
+        LD BC,0X0123
+        LD DE,0X4567
+        LD HL,0X89AB
+        LD IX,0XCDEF
+        LD IY,0XFF00
+        PUSH AF
+        PUSH BC
+        PUSH DE
+        PUSH HL
+        PUSH IX
+        PUSH IY
+        CALL RETORNA_0
+        POP IY
+        POP IX
+        POP HL
+        POP DE
+        POP BC
+        POP AF
+        NOP
+        HALT
+        ;
+RETORNA_0:
+        LD A,0XFF
+        LD BC,0XFFFF
+        LD DE,0XFFFF
+        LD HL,0XFFFF
+        LD IX,0XFFFF
+        LD IY,0XFFFF
+        RET
+        END.

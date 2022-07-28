@@ -1,42 +1,39 @@
-;===========================================================
-; Teste de pilha
-;
-; Autor : Eduardo Pagotto
-; Data: 2020-04-13 
-;
-;===========================================================
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; TESTE DE PILHA
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-ram:            equ     0100h   ; Inicio da ram, cfg em Console.TotROM
-top:            equ     0120h   ; Fim da ram, cfg em Console.TotROM + Connsole.SizeRAM
+RAM:    EQU 0100H  ; INICIO DA RAM, CFG EM CONSOLE.TOTROM
+TOP:    EQU 0120H  ; FIM DA RAM, CFG EM CONSOLE.TOTROM + CONNSOLE.SIZERAM
 
-org             0x0000
-                ld      sp,(valtop)
-                ld      a,0xaa
-                ld      bc,0x0123
-                push    bc
-                pop     bc
-                ld      de,0x4567
-                ld      hl,0x89AB
-                ld      ix,0xCDEF
-                ld      iy,0x789A
-                ld      (ram),a
-                ld      (ram+2),bc
-                ld      (ram+4),de
-                ld      (ram+6),hl
-                ld      (ram+8),ix
-                ld      (ram+10),iy
-                ld      a,0xff
-                ld      bc,0xffff
-                ld      de,0xffff
-                ld      hl,0xffff
-                ld      ix,0xffff
-                ld      iy,0xffff
-                ld      a,(ram)
-                ld      bc,(ram+2)
-                ld      de,(ram+4)
-                ld      hl,(ram+6)
-                ld      ix,(ram+8)
-                ld      iy,(ram+10)
-                halt
-valtop:         defw    0x0120
-end.
+        ORG 0X0000
+        LD SP,(VALTOP)
+        LD A,0XAA
+        LD BC,0X0123
+        PUSH  BC
+        POP BC
+        LD DE,0X4567
+        LD HL,0X89AB
+        LD IX,0XCDEF
+        LD IY,0X789A
+        LD (RAM),A
+        LD (RAM+2),BC
+        LD (RAM+4),DE
+        LD (RAM+6),HL
+        LD (RAM+8),IX
+        LD (RAM+10),IY
+        LD A,0XFF
+        LD BC,0XFFFF
+        LD DE,0XFFFF
+        LD HL,0XFFFF
+        LD IX,0XFFFF
+        LD IY,0XFFFF
+        LD A,(RAM)
+        LD BC,(RAM+2)
+        LD DE,(RAM+4)
+        LD HL,(RAM+6)
+        LD IX,(RAM+8)
+        LD IY,(RAM+10)
+        HALT
+VALTOP: DEFW  0X0120
+        END.

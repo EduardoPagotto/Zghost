@@ -1,68 +1,63 @@
-;===========================================================
-; Primeiro Teste
-;
-; Autor : Eduardo Pagotto
-; Data: 2020-04-13 
-;
-;===========================================================
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; PRIMEIRO TESTE
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-ram:            equ     0100h   ; Inicio da ram, cfg em Console.TotROM
-top:            equ     0120h   ; Fim da ram, cfg em Console.TotROM + Connsole.SizeRAM
-int_ounter      equ     ram + 2
-dev1:           equ     0x01
-dev2:           equ     0x02
+RAM:            EQU 0100H  ; INICIO DA RAM, CFG EM CONSOLE.TOTROM
+TOP:            EQU 0120H  ; FIM DA RAM, CFG EM CONSOLE.TOTROM + CONNSOLE.SIZERAM
+INT_OUNTER:     EQU RAM + 2
+DEV1:           EQU 0X01
+DEV2:           EQU 0X02
 
-org             0x0000
-start:
-                jp      boot
-org             0008h
-                jp      bool_frio
-boot:
-                ld      sp,top
-bool_frio:
-                ei
-                mi1
-dormir:
-                halt
-                jr      dormir
-org             0038h
-                jr      interrupt38
-defw            0xf0f0
-; org             0066h
-;                 jp      intetrrupt66
-; org             0080h
-; intetrrupt66:
-;                 push    af
-;                 push    bc
-;                 push    de
-;                 push    hl
-;                 push    ix
-;                 push    iy
-;                 exx
-;                 call    exec_interrupt
-;                 exx
-;                 pop     iy
-;                 pop     ix
-;                 pop     hl
-;                 pop     de
-;                 pop     bc
-;                 pop     af
-;                 retn
-; exec_interrupt:
-;                 nop
-;                 ret
-continua:
-                ld      a,(int_ounter)
-                inc     a
-                ld      (int_ounter),a
-                ret
-interrupt38:
-                di
-                ex      af,af'
-                exx
-                call    continua
-                exx
-                ex      af,af'
-                ei
-                reti
-end
+                ORG 0X0000
+START:          JP BOOT
+                ;
+                ORG 0008H
+                JP BOOL_FRIO
+                ;
+BOOT:           LD SP,TOP
+BOOL_FRIO:      EI
+                MI1
+DORMIR:         HALT
+                JR DORMIR
+                ;
+                ORG 0038H
+                JR INTERRUPT38
+                ;
+DEFW 0XF0F0
+                ;
+                ORG 0066H
+                JP INTETRRUPT66
+                ORG 0080H
+INTETRRUPT66:   PUSH AF
+                PUSH BC
+                PUSH DE
+                PUSH HL
+                PUSH IX
+                PUSH IY
+                EXX
+                CALL EXEC_INTERRUPT
+                EXX
+                POP IY
+                POP IX
+                POP HL
+                POP DE
+                POP BC
+                POP AF
+                RETN
+EXEC_INTERRUPT: NOP
+                RET
+                ;
+CONTINUA:       LD A,(INT_OUNTER)
+                INC A
+                LD (INT_OUNTER),A
+                RET
+INTERRUPT38:    DI
+                EX AF,AF'
+                EXX
+                CALL CONTINUA
+                EXX
+                EX AF,AF'
+                EI
+                RETI
+                END
