@@ -1,6 +1,4 @@
-#ifndef __REGISTER16__HPP
-#define __REGISTER16__HPP
-
+#pragma once
 #include <cstdint>
 #include <tuple>
 
@@ -30,5 +28,3 @@ class R16 {
     uint8_t* low = nullptr;
     uint8_t* high = nullptr;
 };
-
-#endif

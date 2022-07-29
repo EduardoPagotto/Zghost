@@ -1,6 +1,4 @@
-#ifndef __Z80_HPP
-#define __Z80_HPP
-
+#pragma once
 #include "R16.hpp"
 #include <zghost/bus/Bus.hpp>
 
@@ -114,5 +112,3 @@ class Z80 {
     Bus* bus = nullptr;
     uint8_t null_val = 0;
 };
-
-#endif

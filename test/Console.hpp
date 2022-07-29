@@ -1,6 +1,4 @@
-#ifndef __CONSOLE_H__
-#define __CONSOLE_H__
-
+#pragma once
 #include <zghost/bus/Bus.hpp>
 #include <zghost/bus/Latch.hpp>
 #include <zghost/bus/Memory.hpp>
@@ -20,5 +18,3 @@ class Console {
     Latch* portA;
     Latch* portB;
 };
-
-#endif // __CONSOLE_H__
