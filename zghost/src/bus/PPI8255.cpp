@@ -16,12 +16,12 @@ PPI8255::PPI8255(const uint16_t& address) {
 
 PPI8255::~PPI8255() {}
 
-uint8_t PPI8255::read(const uint16_t& address) {
+uint8_t& PPI8255::read(const uint16_t& address) {
 
     uint16_t t = address - this->addressBase;
 
     if ((this->control & 0x80) != 0x80)
-        return 0xff;
+        return invalid;
 
     if (t == 0x0)
         return this->inA();
@@ -30,7 +30,7 @@ uint8_t PPI8255::read(const uint16_t& address) {
     else if (t == 0x2)
         return this->inC();
 
-    return 0xff;
+    return invalid;
 }
 
 void PPI8255::write(const uint16_t& address, const uint8_t& value) {
@@ -52,7 +52,7 @@ void PPI8255::write(const uint16_t& address, const uint8_t& value) {
     }
 }
 
-bool PPI8255::valid(const uint16_t& address) {
+bool PPI8255::valid(const uint16_t& address) const {
     uint16_t t = address - this->addressBase;
     if (t <= 3)
         return true;
@@ -60,32 +60,32 @@ bool PPI8255::valid(const uint16_t& address) {
     return false;
 }
 
-uint8_t PPI8255::inA() {
+uint8_t& PPI8255::inA() {
     if ((this->control & 0x10) == 0x00)
-        return 0xff;
+        return invalid;
 
     return this->portA;
 }
 
-uint8_t PPI8255::inB() {
+uint8_t& PPI8255::inB() {
     if ((this->control & 0x02) == 0x00) {
-        return 0xff;
+        return invalid;
     }
     return this->portB;
 }
 
-uint8_t PPI8255::inC() {
+uint8_t& PPI8255::inC() {
 
-    uint8_t value = 0x0;
+    defaultC = 0x0;
     if ((this->control & 0x08) == 0x08) {
-        value |= this->portC & 0xf0;
+        defaultC |= this->portC & 0xf0;
     }
 
     if ((this->control & 0x01) == 0x01) {
-        value |= this->portC & 0x0f;
+        defaultC |= this->portC & 0x0f;
     }
 
-    return value;
+    return defaultC;
 }
 
 void PPI8255::outA(const uint8_t& value) {

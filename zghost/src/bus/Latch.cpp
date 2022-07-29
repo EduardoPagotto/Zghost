@@ -5,7 +5,7 @@ void Latch::write(const uint16_t& address, const uint8_t& value) {
     this->hasVal = true;
 }
 
-uint8_t Latch::read(const uint16_t& address) {
+uint8_t& Latch::read(const uint16_t& address) {
     this->hasVal = false;
     return this->value;
 }
