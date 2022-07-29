@@ -29,11 +29,11 @@ void Console::exec() {
     while (true) {
         z80.step();
 
-        bool ok;
-        uint8_t value;
-        value = porta->readDirect();
-        if (value != 0xff)
-            printf("Recebido: %d\n", value);
+        if (porta->isChanged()) {
+            uint8_t value;
+            if (porta->readDirect(value))
+                printf("Recebido: %d\n", value);
+        }
 
         if (z80.Halted) {
             z80.interrupt();

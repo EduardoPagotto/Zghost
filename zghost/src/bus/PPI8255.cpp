@@ -15,24 +15,27 @@ PPI8255::PPI8255(const uint16_t& address) : Device(true, false, false), addressB
 
 PPI8255::~PPI8255() {}
 
-const uint8_t& PPI8255::read(const uint16_t& address) {
+bool PPI8255::read(const uint16_t& address, uint8_t& valueRet) { // FIXME: NAO FUNCIONA!!!
 
     uint16_t t = address - this->addressBase;
 
-    if ((this->control & 0x80) != 0x80)
-        return invalid;
+    if ((this->control & 0x80) != 0x80) {
+        valueRet = invalid;
+        return false;
+    }
 
     if (t == 0x0)
-        return this->inA();
+        valueRet = this->inA();
     else if (t == 0x1)
-        return this->inB();
+        valueRet = this->inB();
     else if (t == 0x2)
-        return this->inC();
+        valueRet = this->inC();
 
-    return invalid;
+    valueRet = invalid;
+    return true;
 }
 
-void PPI8255::write(const uint16_t& address, const uint8_t& value) {
+bool PPI8255::write(const uint16_t& address, const uint8_t& value) {
 
     uint16_t t = address - this->addressBase;
 
@@ -41,7 +44,7 @@ void PPI8255::write(const uint16_t& address, const uint8_t& value) {
     if ((this->control & 0x80) != 0x80) {
         this->bsr();
     } else if ((this->control & 0x80) != 80) {
-        // return false;
+        return false;
     } else if (t == 0x0) {
         this->outA(value);
     } else if (t == 0x1) {
@@ -49,9 +52,11 @@ void PPI8255::write(const uint16_t& address, const uint8_t& value) {
     } else if (t == 0x2) {
         this->outC(value);
     }
+
+    return true;
 }
 
-bool PPI8255::valid(const uint16_t& address) const {
+bool PPI8255::valid(const uint16_t& address) const { // FIXME: NAO FUNCIONA
     uint16_t t = address - this->addressBase;
     if (t <= 3)
         return true;

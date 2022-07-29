@@ -9,16 +9,22 @@ Memory::Memory(const uint16_t& start, const uint16_t& size, const bool& readOnly
 
 Memory::~Memory() { this->mem.clear(); }
 
-const uint8_t& Memory::read(const uint16_t& address) {
-    changed = false;
-    uint16_t addrFinal = address - start;
-    return this->mem[addrFinal];
+bool Memory::read(const uint16_t& address, uint8_t& valueRet) {
+    if (valid(address)) {
+        changed = false;
+        uint16_t addrFinal = address - start;
+        valueRet = this->mem[addrFinal];
+        return true;
+    }
+    return false;
 }
 
-void Memory::write(const uint16_t& address, const uint8_t& value) {
-    if (!readOnly) {
+bool Memory::write(const uint16_t& address, const uint8_t& value) {
+    if ((!readOnly) && valid(address)) {
         uint16_t addrFinal = address - start;
         this->mem[addrFinal] = value;
         changed = true;
+        return true;
     }
+    return false;
 }

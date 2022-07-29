@@ -5,12 +5,12 @@ class Latch : public Device {
   public:
     Latch(const uint16_t& address) : Device(true, false, false), address(address), value(0x0), invalid(0xff) {}
     virtual ~Latch() = default;
-    virtual const uint8_t& read(const uint16_t& address) override;
-    virtual void write(const uint16_t& address, const uint8_t& value) override;
+    virtual bool read(const uint16_t& address, uint8_t& valueRet) override;
+    virtual bool write(const uint16_t& address, const uint8_t& value) override;
     virtual bool valid(const uint16_t& address) const override { return (this->address == address); }
 
-    const uint8_t& readDirect();
-    void writeDirect(const uint8_t& value);
+    bool readDirect(uint8_t& valueRet);
+    bool writeDirect(const uint8_t& value);
 
   private:
     uint16_t address = 0x0000;
