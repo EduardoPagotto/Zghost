@@ -2,23 +2,20 @@
 
 void Latch::write(const uint16_t& address, const uint8_t& value) {
     this->value = value;
-    this->hasVal = true;
+    this->changed = true;
 }
 
 const uint8_t& Latch::read(const uint16_t& address) {
-    this->hasVal = false;
+    this->changed = false;
     return this->value;
 }
 
 const uint8_t& Latch::readDirect() {
-    if (this->hasVal) {
-        this->hasVal = false;
-        return this->value;
-    }
-    return invalid;
+    this->changed = false;
+    return this->value;
 }
 
 void Latch::writeDirect(const uint8_t& value) {
-    this->hasVal = true;
+    this->changed = true;
     this->value = value;
 }

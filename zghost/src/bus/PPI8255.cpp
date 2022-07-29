@@ -2,8 +2,7 @@
 
 // verificar: https://github.com/bibekdahal/8085-simulator/blob/master/PPI.py
 
-PPI8255::PPI8255(const uint16_t& address) {
-    this->addressBase = address;
+PPI8255::PPI8255(const uint16_t& address) : Device(true, false, false), addressBase(address) {
     this->control = 0;
     this->portA = 0;
     this->portB = 0;
