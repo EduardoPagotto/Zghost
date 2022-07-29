@@ -14,12 +14,15 @@
 
 class Z80 {
   public:
-    Z80(Bus* pBus);
+    Z80();
     virtual ~Z80();
     void reset();
     void step();
     void interrupt();
     void nonMaskableInterrupt();
+
+    Bus& getBusMemory() { return mem; }
+    Bus& getBusIO() { return io; }
 
     void push(const uint16_t& value);
     uint16_t pop();
@@ -109,6 +112,7 @@ class Z80 {
 
   private:
     void init_table_sz53();
-    Bus* bus = nullptr;
+    Bus mem;
+    Bus io;
     uint8_t null_val = 0;
 };

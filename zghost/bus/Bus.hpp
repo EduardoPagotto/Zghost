@@ -8,17 +8,11 @@ class Bus {
     Bus() {}
     virtual ~Bus() {}
 
-    inline Device* getMemory(const std::string& name) { return this->mem[name]; }
-    inline void addMemory(const std::string& name, Device* dev) { this->mem[name] = dev; }
-    uint8_t readMemory(const uint16_t& address);
-    void writeMemory(const uint16_t& address, const uint8_t& value);
-
-    inline Device* getIo(const std::string& name) { return this->io[name]; }
-    inline void addIo(const std::string& name, Device* dev) { this->io[name] = dev; }
-    uint8_t readIo(const uint16_t& address);
-    void writeIo(const uint16_t& address, const uint8_t& value);
+    inline Device* get(const std::string& name) { return this->dev[name]; }
+    inline void add(const std::string& name, Device* dev) { this->dev[name] = dev; }
+    uint8_t read(const uint16_t& address);
+    void write(const uint16_t& address, const uint8_t& value);
 
   private:
-    std::map<std::string, Device*> mem;
-    std::map<std::string, Device*> io;
+    std::map<std::string, Device*> dev;
 };
