@@ -12,7 +12,7 @@ Memory::Memory(const uint16_t& start, const uint16_t& size) {
 
 Memory::~Memory() { this->mem.clear(); }
 
-uint8_t& Memory::read(const uint16_t& address) {
+const uint8_t& Memory::read(const uint16_t& address) {
     uint16_t addrFinal = address - start;
     return this->mem[addrFinal];
 }

@@ -16,7 +16,7 @@ PPI8255::PPI8255(const uint16_t& address) {
 
 PPI8255::~PPI8255() {}
 
-uint8_t& PPI8255::read(const uint16_t& address) {
+const uint8_t& PPI8255::read(const uint16_t& address) {
 
     uint16_t t = address - this->addressBase;
 

@@ -6,7 +6,7 @@ class PPI8255 : public Device {
   public:
     PPI8255(const uint16_t& address);
     virtual ~PPI8255();
-    virtual uint8_t& read(const uint16_t& address) override;
+    virtual const uint8_t& read(const uint16_t& address) override;
     virtual void write(const uint16_t& address, const uint8_t& value) override;
     virtual bool valid(const uint16_t& address) const override;
 
