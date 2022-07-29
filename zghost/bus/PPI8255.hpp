@@ -1,6 +1,4 @@
-#ifndef __PPI8255_H__
-#define __PPI8255_H__
-
+#pragma once
 #include "Device.hpp"
 
 class PPI8255 : public Device {
@@ -8,31 +6,30 @@ class PPI8255 : public Device {
   public:
     PPI8255(const uint16_t& address);
     virtual ~PPI8255();
-    virtual std::tuple<uint8_t, bool> read(const uint16_t& address) override;
-    virtual bool write(const uint16_t& address, const uint8_t& value) override;
+    virtual uint8_t read(const uint16_t& address) override;
+    virtual void write(const uint16_t& address, const uint8_t& value) override;
     virtual bool valid(const uint16_t& address) override;
 
-    std::tuple<uint8_t, bool> inA();
-    bool outA(const uint8_t& value);
-    std::tuple<uint8_t, bool> inB();
-    bool outB(const uint8_t& value);
-    std::tuple<uint8_t, bool> inC();
-    bool outC(const uint8_t& value);
+    uint8_t inA();
+    uint8_t inB();
+    uint8_t inC();
+
+    void outA(const uint8_t& value);
+    void outB(const uint8_t& value);
+    void outC(const uint8_t& value);
 
     void bsr();
 
   private:
     void change();
 
-    uint16_t addressBase;
-    uint8_t portA;
-    uint8_t portB;
-    uint8_t portC;
-    uint8_t control;
+    uint16_t addressBase = 0x0000;
+    uint8_t portA = 0;
+    uint8_t portB = 0;
+    uint8_t portC = 0;
+    uint8_t control = 0;
 
     // interruptA;
     // interruptB;
     // changedHandler;
 };
-
-#endif // __PPI8255_H__

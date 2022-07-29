@@ -1,14 +1,10 @@
-#ifndef __DEVICE_HPP
-#define __DEVICE_HPP
-
+#pragma once
 #include <cstdint>
 #include <tuple>
 
 class Device {
   public:
-    virtual std::tuple<uint8_t, bool> read(const uint16_t& address) = 0;
-    virtual bool write(const uint16_t& address, const uint8_t& value) = 0;
+    virtual uint8_t read(const uint16_t& address) = 0;
+    virtual void write(const uint16_t& address, const uint8_t& value) = 0;
     virtual bool valid(const uint16_t& address) = 0;
 };
-
-#endif

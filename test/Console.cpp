@@ -29,10 +29,8 @@ void Console::exec() {
 
         bool ok;
         uint8_t value;
-        std::tie(value, ok) = portA->readDirect();
-        if (ok) {
-            printf("Recebido: %d\n", value);
-        }
+        value = portA->readDirect();
+        printf("Recebido: %d\n", value);
 
         if (z80->Halted) {
             z80->interrupt();

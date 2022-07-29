@@ -1,34 +1,23 @@
 #include <zghost/bus/Bus.hpp>
 
 uint8_t Bus::readMemory(const uint16_t& address) {
-    using namespace std;
     for (auto it = mem.begin(); it != mem.end(); it++) {
 
-        string name = it->first;
+        std::string name = it->first;
         Device* pDev = it->second;
-
-        uint8_t val;
-        bool ok;
-
-        tie(val, ok) = pDev->read(address);
-        if (ok) {
-            return val;
-        }
+        if (pDev->valid(address) == true)
+            return pDev->read(address);
     }
-
     return 0xff;
 }
 
 void Bus::writeMemory(const uint16_t& address, const uint8_t& value) {
-
-    using namespace std;
     for (auto it = mem.begin(); it != mem.end(); it++) {
 
-        string name = it->first;
+        std::string name = it->first;
         Device* pDev = it->second;
-
-        if (pDev->write(address, value))
-            return;
+        if (pDev->valid(address) == true)
+            pDev->write(address, value);
     }
 }
 
@@ -38,14 +27,8 @@ uint8_t Bus::readIo(const uint16_t& address) {
 
         string name = it->first;
         Device* pDev = it->second;
-
-        uint8_t val;
-        bool ok;
-
-        tie(val, ok) = pDev->read(address);
-        if (ok) {
-            return val;
-        }
+        if (pDev->valid(address) == true)
+            return pDev->read(address);
     }
 
     return 0xff;
@@ -57,8 +40,7 @@ void Bus::writeIo(const uint16_t& address, const uint8_t& value) {
 
         string name = it->first;
         Device* pDev = it->second;
-
-        if (pDev->write(address, value))
-            return;
+        if (pDev->valid(address) == true)
+            pDev->write(address, value);
     }
 }

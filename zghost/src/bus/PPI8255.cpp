@@ -16,13 +16,12 @@ PPI8255::PPI8255(const uint16_t& address) {
 
 PPI8255::~PPI8255() {}
 
-std::tuple<uint8_t, bool> PPI8255::read(const uint16_t& address) {
+uint8_t PPI8255::read(const uint16_t& address) {
 
     uint16_t t = address - this->addressBase;
 
-    if ((this->control & 0x80) != 0x80) {
-        return std::make_tuple(0xff, false);
-    }
+    if ((this->control & 0x80) != 0x80)
+        return 0xff;
 
     if (t == 0x0)
         return this->inA();
@@ -31,10 +30,10 @@ std::tuple<uint8_t, bool> PPI8255::read(const uint16_t& address) {
     else if (t == 0x2)
         return this->inC();
 
-    return std::make_tuple(0xff, false);
+    return 0xff;
 }
 
-bool PPI8255::write(const uint16_t& address, const uint8_t& value) {
+void PPI8255::write(const uint16_t& address, const uint8_t& value) {
 
     uint16_t t = address - this->addressBase;
 
@@ -43,16 +42,14 @@ bool PPI8255::write(const uint16_t& address, const uint8_t& value) {
     if ((this->control & 0x80) != 0x80) {
         this->bsr();
     } else if ((this->control & 0x80) != 80) {
-        return false;
+        // return false;
     } else if (t == 0x0) {
-        return this->outA(value);
+        this->outA(value);
     } else if (t == 0x1) {
-        return this->outB(value);
+        this->outB(value);
     } else if (t == 0x2) {
-        return this->outC(value);
+        this->outC(value);
     }
-
-    return false;
 }
 
 bool PPI8255::valid(const uint16_t& address) {
@@ -63,21 +60,21 @@ bool PPI8255::valid(const uint16_t& address) {
     return false;
 }
 
-std::tuple<uint8_t, bool> PPI8255::inA() {
-    if ((this->control & 0x10) == 0x00) {
-        return std::make_tuple(false, 0xff);
-    }
-    return std::make_tuple(true, this->portA);
+uint8_t PPI8255::inA() {
+    if ((this->control & 0x10) == 0x00)
+        return 0xff;
+
+    return this->portA;
 }
 
-std::tuple<uint8_t, bool> PPI8255::inB() {
+uint8_t PPI8255::inB() {
     if ((this->control & 0x02) == 0x00) {
-        return std::make_tuple(false, 0xff);
+        return 0xff;
     }
-    return std::make_tuple(true, this->portB);
+    return this->portB;
 }
 
-std::tuple<uint8_t, bool> PPI8255::inC() {
+uint8_t PPI8255::inC() {
 
     uint8_t value = 0x0;
     if ((this->control & 0x08) == 0x08) {
@@ -88,31 +85,27 @@ std::tuple<uint8_t, bool> PPI8255::inC() {
         value |= this->portC & 0x0f;
     }
 
-    return std::make_tuple(true, value);
+    return value;
 }
 
-bool PPI8255::outA(const uint8_t& value) {
+void PPI8255::outA(const uint8_t& value) {
 
-    if (((this->control & 0x10) == 0x10) && ((this->control & 0x60) != 0x60)) {
-        return false;
-    }
+    if (((this->control & 0x10) == 0x10) && ((this->control & 0x60) != 0x60))
+        return;
+
     this->portA = value;
-    return true;
 }
 
-bool PPI8255::outB(const uint8_t& value) {
+void PPI8255::outB(const uint8_t& value) {
 
     if ((this->control & 0x02) == 0x02)
-        return false;
+        return;
 
     this->portB = value;
-
     this->change();
-
-    return true;
 }
 
-bool PPI8255::outC(const uint8_t& value) {
+void PPI8255::outC(const uint8_t& value) {
 
     if ((this->control & 0x08) == 0x00)
         this->portC = (value & 0xF0) | (this->portC & 0x0F);
@@ -120,8 +113,6 @@ bool PPI8255::outC(const uint8_t& value) {
         this->portC = (this->portC & 0xF0) | (value & 0x0F);
 
     this->change();
-
-    return true;
 }
 
 void PPI8255::bsr() {

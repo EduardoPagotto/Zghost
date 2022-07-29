@@ -1,6 +1,4 @@
-#ifndef __BUS_HPP
-#define __BUS_HPP
-
+#pragma once
 #include "Device.hpp"
 #include <map>
 #include <string>
@@ -24,5 +22,3 @@ class Bus {
     std::map<std::string, Device*> mem;
     std::map<std::string, Device*> io;
 };
-
-#endif
