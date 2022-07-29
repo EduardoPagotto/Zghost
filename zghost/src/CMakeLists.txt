@@ -3,17 +3,17 @@ cmake_minimum_required(VERSION 3.16.3)
 PROJECT(zghostApi)
 
 #define objetos a compilar
-set (SourcesCore Latch.cpp
-                 Memory.cpp
-                 Bus.cpp
-                 Z80.cpp
-                 OpCode.cpp
-                 OpCodeCB.cpp
-                 OpCodeED.cpp
-                 OpCodeDD.cpp
-                 OpCodeFD.cpp
-                 OpCodeDDCBFDCB.cpp
-                 PPI8255.cpp)
+set (SourcesCore z80/Z80.cpp
+                 z80/OpCode.cpp
+                 z80/OpCodeCB.cpp
+                 z80/OpCodeED.cpp
+                 z80/OpCodeDD.cpp
+                 z80/OpCodeFD.cpp
+                 z80/OpCodeDDCBFDCB.cpp
+                 bus/Memory.cpp
+                 bus/Bus.cpp
+                 bus/Latch.cpp
+                 bus/PPI8255.cpp)
 
 # #define os includes
 set (IncludeCore ${CMAKE_SOURCE_DIR})
