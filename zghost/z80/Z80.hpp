@@ -67,12 +67,13 @@ class Z80 {
     void biti(const uint8_t& bit, const uint8_t& value, const uint16_t& address);
 
     void in(uint8_t* reg, const uint16_t& address);
-    uint8_t readPort(const uint16_t& address);
-    void writePort(const uint16_t& address, const uint8_t& b);
+    inline uint8_t readPort(const uint16_t& address) { return this->io.read(address); }
+    inline void writePort(const uint16_t& address, const uint8_t& b) { this->io.write(address, b); }
 
     void loadR16(R16& pReg);
-    uint8_t readMem(const uint16_t& address);
-    void writeMem(const uint16_t& address, const uint8_t& value);
+
+    inline uint8_t readMem(const uint16_t& address) { return this->mem.read(address); }
+    inline void writeMem(const uint16_t& address, const uint8_t& value) { this->mem.write(address, value); }
 
     const uint8_t getRegVal(const uint8_t& opcode);
     uint8_t& getRegRef(const uint8_t& opcode);
