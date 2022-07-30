@@ -2,91 +2,97 @@
 
 // verificar: https://github.com/bibekdahal/8085-simulator/blob/master/PPI.py
 
-PPI8255::PPI8255(const uint16_t& address) : Device(true, false, false), addressBase(address) {
-    this->control = 0;
-    this->portA = 0;
-    this->portB = 0;
-    this->portC = 0;
+PPI8255::PPI8255(const uint16_t& address, const uint8_t& status) : Memory(address, 4, DSTAT_ENABLED) {
 
-    // this->interruptA = nullptr;
-    // this->interruptB = nullptr;
-    // this->changedHandler = nullptr
+    mem[0] = 0; // A
+    mem[1] = 0; // B
+    mem[2] = 0; // C
+    mem[3] = 0; // Control
 }
 
 PPI8255::~PPI8255() {}
 
 bool PPI8255::read(const uint16_t& address, uint8_t& valueRet) { // FIXME: NAO FUNCIONA!!!
 
-    uint16_t t = address - this->addressBase;
-
-    if ((this->control & 0x80) != 0x80) {
-        valueRet = invalid;
+    valueRet = 0xff;
+    if (!valid(address))
         return false;
-    }
 
-    if (t == 0x0)
+    uint16_t t = address - start;
+
+    if ((mem[3] & 0x80) != 0x80)
+        return false;
+
+    if (t == 0x03) {
+        return false;
+
+    } else if (t == 0x00) {
         valueRet = this->inA();
-    else if (t == 0x1)
+
+    } else if (t == 0x01) {
         valueRet = this->inB();
-    else if (t == 0x2)
+
+    } else if (t == 0x02)
         valueRet = this->inC();
 
-    valueRet = invalid;
     return true;
 }
 
 bool PPI8255::write(const uint16_t& address, const uint8_t& value) {
 
-    uint16_t t = address - this->addressBase;
+    if ((!(status & DSTAT_READONLY)) && valid(address)) {
 
-    if (t == 0x3)
-        this->control = value;
-    if ((this->control & 0x80) != 0x80) {
-        this->bsr();
-    } else if ((this->control & 0x80) != 80) {
-        return false;
-    } else if (t == 0x0) {
-        this->outA(value);
-    } else if (t == 0x1) {
-        this->outB(value);
-    } else if (t == 0x2) {
-        this->outC(value);
-    }
+        uint16_t t = address - start;
+        if (t == 0x03) { // Control
+            mem[3] = value;
+            if ((mem[3] & 0x80) != 0x80) {
+                this->bsr();
+            }
 
-    return true;
-}
+        } else if ((mem[3] & 0x80) != 80) {
+            return false;
 
-bool PPI8255::valid(const uint16_t& address) const { // FIXME: NAO FUNCIONA
-    uint16_t t = address - this->addressBase;
-    if (t <= 3)
+        } else if (t == 0x0) {
+            this->outA(value);
+
+        } else if (t == 0x1) {
+            this->outB(value);
+
+        } else if (t == 0x2) {
+            this->outC(value);
+        }
+
         return true;
+    }
 
     return false;
 }
 
-uint8_t& PPI8255::inA() {
-    if ((this->control & 0x10) == 0x00)
-        return invalid;
+uint8_t PPI8255::inA() {
 
-    return this->portA;
+    if ((mem[3] & 0x10) == 0x00)
+        return 0;
+
+    return mem[0];
 }
 
-uint8_t& PPI8255::inB() {
-    if ((this->control & 0x02) == 0x00) {
-        return invalid;
-    }
-    return this->portB;
+uint8_t PPI8255::inB() {
+
+    if ((mem[3] & 0x02) == 0x00)
+        return 0;
+
+    return mem[1];
 }
 
-uint8_t& PPI8255::inC() {
+uint8_t PPI8255::inC() {
 
-    defaultC = 0x0;
-    if ((this->control & 0x08) == 0x08) {
-        defaultC |= this->portC & 0xf0;
+    uint8_t defaultC = 0x0;
+    if ((mem[3] & 0x08) == 0x08) {
+        defaultC |= mem[2] & 0xf0;
     }
 
-    if ((this->control & 0x01) == 0x01) {
-        defaultC |= this->portC & 0x0f;
+    if ((mem[3] & 0x01) == 0x01) {
+        defaultC |= mem[2] & 0x0f;
     }
 
     return defaultC;
@@ -94,57 +100,59 @@ uint8_t& PPI8255::inC() {
 
 void PPI8255::outA(const uint8_t& value) {
 
-    if (((this->control & 0x10) == 0x10) && ((this->control & 0x60) != 0x60))
+    if (((mem[3] & 0x10) == 0x10) && ((mem[3] & 0x60) != 0x60))
         return;
 
-    this->portA = value;
+    mem[0] = value;
+    this->change();
 }
 
 void PPI8255::outB(const uint8_t& value) {
 
-    if ((this->control & 0x02) == 0x02)
+    if ((mem[3] & 0x02) == 0x02)
         return;
 
-    this->portB = value;
+    this->mem[2] = value;
     this->change();
 }
 
 void PPI8255::outC(const uint8_t& value) {
 
-    if ((this->control & 0x08) == 0x00)
-        this->portC = (value & 0xF0) | (this->portC & 0x0F);
-    if ((this->control & 0x01) == 0x00)
-        this->portC = (this->portC & 0xF0) | (value & 0x0F);
+    if ((mem[3] & 0x08) == 0x00)
+        mem[2] = (value & 0xF0) | (mem[2] & 0x0F);
+    if ((mem[3] & 0x01) == 0x00)
+        mem[2] = (mem[2] & 0xF0) | (value & 0x0F);
 
     this->change();
 }
 
 void PPI8255::bsr() {
 
-    uint8_t bit = this->control & 0x0E;
+    uint8_t bit = mem[3] & 0x0E;
     bit = bit >> 1;
-    uint8_t data = this->control & 0x01;
+    uint8_t data = mem[3] & 0x01;
     data = data << bit;
-    this->portC = (this->portC & ~data) | data;
+    mem[2] = (mem[2] & ~data) | data;
     this->change();
 }
 
 void PPI8255::change() {
-    // // TODO
+    // TODO
     // if (this->changedHandler)
     //     this->changedHandler();
 }
 
-// void SetInterruptCallPA(void* call) { this->interruptA = call; }
+void PPI8255::SetInterruptCallPA(void* call) { this->interruptA = call; }
+void PPI8255::SetInterruptCallPB(void* call) { this->interruptB = call; }
 
-// void SetInterruptCallPB(void* call) { void->interruptB = call; }
+void PPI8255::strobeA() {
+    // TODO
+    // if (((mem[3] & 0x20) == 0x20) && (this->interruptA != nullptr))
+    //     this->interruptA();
+}
 
-// void strobeA() {
-//     if (((this->crontrol & 0x20) == 0x20) && (this->interruptA != nullptr))
-//         this->interruptA();
-// }
-
-// void strobeB() {
-//     if (((this->crontrol & 0x04) == 0x04) && (this->interruptB != nullptr))
-//         this->interruptB();
-// }
+void PPI8255::strobeB() {
+    // TODO
+    // if (((mem[3] & 0x04) == 0x04) && (this->interruptB != nullptr))
+    //     this->interruptB();
+}

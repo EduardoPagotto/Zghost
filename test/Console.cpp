@@ -6,10 +6,10 @@
 
 Console::Console() {
 
-    z80.getBusMemory().add("ROM", new Memory(0x0000, 0x0100, true));
-    z80.getBusMemory().add("RAM", new Memory(0x0100, 0x0020, false));
-    z80.getBusIO().add("PORTA", new Latch(0x0001));
-    z80.getBusIO().add("PORTB", new Latch(0x0002));
+    z80.getBusMemory().add("ROM", new Memory(0x0000, 0x0100, DSTAT_ENABLED | DSTAT_CHANGED));
+    z80.getBusMemory().add("RAM", new Memory(0x0100, 0x0020, DSTAT_ENABLED | DSTAT_CHANGED));
+    z80.getBusIO().add("PORTA", new Latch(0x0001, DSTAT_ENABLED));
+    z80.getBusIO().add("PORTB", new Latch(0x0002, DSTAT_ENABLED));
 
     Memory* rom = (Memory*)z80.getBusMemory().get("ROM");
     std::ifstream instream("./bin/indexados.bin", std::ios::in | std::ios::binary);
@@ -29,7 +29,7 @@ void Console::exec() {
     while (true) {
         z80.step();
 
-        if (porta->isChanged()) {
+        if (porta->getStatus() & DSTAT_CHANGED) {
             uint8_t value;
             if (porta->readDirect(value))
                 printf("Recebido: %d\n", value);
