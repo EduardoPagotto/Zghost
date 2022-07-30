@@ -15,13 +15,13 @@ PPI8255::~PPI8255() {}
 bool PPI8255::read(const uint16_t& address, uint8_t& valueRet) { // FIXME: NAO FUNCIONA!!!
 
     valueRet = 0xff;
-    if (!valid(address))
+    if (!okRead(address))
         return false;
-
-    uint16_t t = address - start;
 
     if ((mem[3] & 0x80) != 0x80)
         return false;
+
+    uint16_t t = address - start;
 
     if (t == 0x03) {
         return false;
@@ -40,32 +40,30 @@ bool PPI8255::read(const uint16_t& address, uint8_t& valueRet) { // FIXME: NAO F
 
 bool PPI8255::write(const uint16_t& address, const uint8_t& value) {
 
-    if ((!(status & DSTAT_READONLY)) && valid(address)) {
+    if (!okWrite(address))
+        return false;
 
-        uint16_t t = address - start;
-        if (t == 0x03) { // Control
-            mem[3] = value;
-            if ((mem[3] & 0x80) != 0x80) {
-                this->bsr();
-            }
-
-        } else if ((mem[3] & 0x80) != 80) {
-            return false;
-
-        } else if (t == 0x0) {
-            this->outA(value);
-
-        } else if (t == 0x1) {
-            this->outB(value);
-
-        } else if (t == 0x2) {
-            this->outC(value);
+    uint16_t t = address - start;
+    if (t == 0x03) { // Control
+        mem[3] = value;
+        if ((mem[3] & 0x80) != 0x80) {
+            this->bsr();
         }
 
-        return true;
+    } else if ((mem[3] & 0x80) != 80) {
+        return false;
+
+    } else if (t == 0x0) {
+        this->outA(value);
+
+    } else if (t == 0x1) {
+        this->outB(value);
+
+    } else if (t == 0x2) {
+        this->outC(value);
     }
 
-    return false;
+    return true;
 }
 
 uint8_t PPI8255::inA() {

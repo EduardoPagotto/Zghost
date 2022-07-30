@@ -10,7 +10,7 @@ bool Latch::readDirect(uint8_t& valueRet) {
 }
 
 bool Latch::writeDirect(const uint8_t& value) {
-    if (!(status &= DSTAT_READONLY) && (status & (DSTAT_ENABLED))) {
+    if (status &= (DSTAT_READWRITE | DSTAT_ENABLED)) {
         status |= DSTAT_CHANGED;
         mem[0] = value;
         return true;
