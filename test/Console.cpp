@@ -1,22 +1,18 @@
 #include "Console.hpp"
 #include "zghost/bus/Latch.hpp"
 #include "zghost/bus/Memory.hpp"
-#include <fstream>
 #include <unistd.h>
 
 Console::Console() {
 
-    z80.getBusMemory().add("ROM", new Memory(0x0000, 0x0100, DSTAT_ENABLED | DSTAT_CHANGED));
-    z80.getBusMemory().add("RAM", new Memory(0x0100, 0x0020, DSTAT_ENABLED | DSTAT_CHANGED));
-    z80.getBusIO().add("PORTA", new Latch(0x0001, DSTAT_ENABLED));
-    z80.getBusIO().add("PORTB", new Latch(0x0002, DSTAT_ENABLED));
+    idRom = bus.add(DeviceType::MEMORY, new Memory(0x0000, 0x0100, DSTAT_ENABLED));                                   // ROM
+    idRam = bus.add(DeviceType::MEMORY, new Memory(0x0100, 0x0020, DSTAT_ENABLED | DSTAT_CHANGED | DSTAT_READWRITE)); // RAM
+    idPortA = bus.add(DeviceType::IO, new Latch(0x0001, DSTAT_ENABLED | DSTAT_READWRITE));                            // PORT A
+    idPortB = bus.add(DeviceType::IO, new Latch(0x0002, DSTAT_ENABLED | DSTAT_READWRITE));                            // PORT B
 
-    Memory* rom = (Memory*)z80.getBusMemory().get("ROM");
-    std::ifstream instream("./bin/indexados.bin", std::ios::in | std::ios::binary);
-    std::vector<uint8_t> data((std::istreambuf_iterator<char>(instream)), std::istreambuf_iterator<char>());
-    for (int i = 0; i < data.size(); i++)
-        rom->getRaw()[i] = data[i];
+    bus.load("./bin/indexados.bin", idRom);
 
+    z80.create(&bus);
     z80.reset();
 }
 
@@ -24,7 +20,7 @@ Console::~Console() {}
 
 void Console::exec() {
 
-    Latch* porta = (Latch*)z80.getBusIO().get("PORTA");
+    Latch* porta = (Latch*)bus.get(idPortA);
 
     while (true) {
         z80.step();

@@ -21,9 +21,6 @@ class Z80 {
     void interrupt();
     void nonMaskableInterrupt();
 
-    Bus& getBusMemory() { return mem; }
-    Bus& getBusIO() { return io; }
-
     void push(const uint16_t& value);
     uint16_t pop();
     void pushR16(R16& reg16);
@@ -67,13 +64,13 @@ class Z80 {
     void biti(const uint8_t& bit, const uint8_t& value, const uint16_t& address);
 
     void in(uint8_t* reg, const uint16_t& address);
-    inline uint8_t readPort(const uint16_t& address) { return this->io.read(address); }
-    inline void writePort(const uint16_t& address, const uint8_t& b) { this->io.write(address, b); }
+    inline uint8_t readPort(const uint16_t& address) { return this->bus->read(DeviceType::IO, address); }
+    inline void writePort(const uint16_t& address, const uint8_t& b) { this->bus->write(DeviceType::IO, address, b); }
 
     void loadR16(R16& pReg);
 
-    inline uint8_t readMem(const uint16_t& address) { return this->mem.read(address); }
-    inline void writeMem(const uint16_t& address, const uint8_t& value) { this->mem.write(address, value); }
+    inline uint8_t readMem(const uint16_t& address) { return this->bus->read(DeviceType::MEMORY, address); }
+    inline void writeMem(const uint16_t& address, const uint8_t& value) { this->bus->write(DeviceType::MEMORY, address, value); }
 
     const uint8_t getRegVal(const uint8_t& opcode);
     uint8_t& getRegRef(const uint8_t& opcode);
@@ -111,9 +108,10 @@ class Z80 {
     const static uint8_t overflowAddTable[];
     const static uint8_t overflowSubTable[];
 
+    void create(Bus* bus) { this->bus = bus; }
+
   private:
     void init_table_sz53();
-    Bus mem;
-    Bus io;
+    Bus* bus;
     uint8_t null_val = 0;
 };
