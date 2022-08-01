@@ -5,12 +5,12 @@
 
 Console::Console() {
 
-    idRom = bus.add(DeviceType::MEMORY, new Memory(0x0000, 0x0100, DSTAT_ENABLED));                                   // ROM
-    idRam = bus.add(DeviceType::MEMORY, new Memory(0x0100, 0x0020, DSTAT_ENABLED | DSTAT_CHANGED | DSTAT_READWRITE)); // RAM
-    idPortA = bus.add(DeviceType::IO, new Latch(0x0001, DSTAT_ENABLED | DSTAT_READWRITE));                            // PORT A
-    idPortB = bus.add(DeviceType::IO, new Latch(0x0002, DSTAT_ENABLED | DSTAT_READWRITE));                            // PORT B
+    uint16_t idRom = bus.add(DeviceType::MEMORY, "ROM", new Memory(0x0000, 0x0100, DSTAT_ENABLED));                                   // ROM
+    uint16_t idRam = bus.add(DeviceType::MEMORY, "RAM", new Memory(0x0100, 0x0100, DSTAT_ENABLED | DSTAT_CHANGED | DSTAT_READWRITE)); // RAM
+    uint16_t idPortA = bus.add(DeviceType::IO, "PortA", new Latch(0x0001, DSTAT_ENABLED | DSTAT_READWRITE)); // PORT A
+    uint16_t idPortB = bus.add(DeviceType::IO, "PortB", new Latch(0x0002, DSTAT_ENABLED | DSTAT_READWRITE)); // PORT B
 
-    bus.load("./bin/indexados.bin", idRom);
+    bus.load("./bin/ROM.bin", idRom);
 
     z80.create(&bus);
     z80.reset();
@@ -20,7 +20,7 @@ Console::~Console() {}
 
 void Console::exec() {
 
-    Latch* porta = (Latch*)bus.get(idPortA);
+    Latch* porta = (Latch*)bus.get("PortA");
 
     while (true) {
         z80.step();
