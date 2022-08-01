@@ -11,7 +11,7 @@ Memory::~Memory() { this->mem.clear(); }
 
 bool Memory::read(const uint16_t& address, uint8_t& valueRet) {
     if (okRead(address)) {
-        status &= !DSTAT_CHANGED; // limpa so o change
+        status &= ~DSTAT_CHANGED; // limpa so o change
         uint16_t addrFinal = address - start;
         valueRet = this->mem[addrFinal];
         return true;

@@ -3,9 +3,9 @@
 #include <tuple>
 #include <vector>
 
-#define DSTAT_ENABLED 0b00000001
-#define DSTAT_CHANGED 0b00000010
-#define DSTAT_READWRITE 0b00000100
+#define DSTAT_ENABLED 0x01   // 0b00000001
+#define DSTAT_CHANGED 0x02   // 0b00000010
+#define DSTAT_READWRITE 0x04 // 0b00000100
 
 enum class DevType { MEMORY = 0, IO = 1 };
 
@@ -18,10 +18,10 @@ class Device {
 
     inline const uint8_t& getStatus() { return status; }
     inline virtual void setToEnable() { this->status |= DSTAT_ENABLED; }
-    inline virtual void setToDisable() { this->status &= (!DSTAT_ENABLED); }
+    inline virtual void setToDisable() { this->status &= (~DSTAT_ENABLED); }
     inline virtual std::vector<uint8_t>& getRaw() { return mem; }
 
   protected:
     std::vector<uint8_t> mem;
-    uint8_t status = DSTAT_ENABLED;
+    uint8_t status = 0;
 };

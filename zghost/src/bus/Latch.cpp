@@ -2,7 +2,7 @@
 
 bool Latch::readDirect(uint8_t& valueRet) {
     if (status & DSTAT_ENABLED) {
-        status &= !DSTAT_CHANGED;
+        status &= (~DSTAT_CHANGED);
         valueRet = mem[0];
         return true;
     }
