@@ -5,8 +5,8 @@
 
 Console::Console() {
 
-    uint16_t idRom = bus.add(DeviceType::MEMORY, "ROM", new Memory(0x0000, 0x0100, DSTAT_ENABLED));                   // ROM
-    uint16_t idRam = bus.add(DeviceType::MEMORY, "RAM", new Memory(0x0100, 0x0100, DSTAT_ENABLED | DSTAT_READWRITE)); // RAM
+    uint16_t idRom = bus.add(DeviceType::MEMORY, "ROM", new Memory(0x0000, 0x0200, DSTAT_ENABLED));                   // ROM
+    uint16_t idRam = bus.add(DeviceType::MEMORY, "RAM", new Memory(0x0200, 0x0100, DSTAT_ENABLED | DSTAT_READWRITE)); // RAM
     uint16_t idPortA = bus.add(DeviceType::IO, "PortA", new Latch(0x0001, DSTAT_ENABLED | DSTAT_READWRITE));          // PORT A
     uint16_t idPortB = bus.add(DeviceType::IO, "PortB", new Latch(0x0002, DSTAT_ENABLED | DSTAT_READWRITE));          // PORT B
 

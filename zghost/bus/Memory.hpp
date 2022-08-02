@@ -12,7 +12,7 @@ class Memory : public Device {
   protected:
     inline bool okRead(const uint16_t& address) const { return (status & DSTAT_ENABLED) && (address >= start) && (address < top); }
     inline bool okWrite(const uint16_t& address) const {
-        return (status & (DSTAT_READWRITE | DSTAT_ENABLED)) && (address >= start) && (address < top);
+        return ((status & (DSTAT_READWRITE | DSTAT_ENABLED)) == 0x5) && (address >= start) && (address < top);
     }
 
     uint16_t start = 0x0000;

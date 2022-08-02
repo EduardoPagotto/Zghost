@@ -3,11 +3,11 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-RAM:            EQU $100        ; Inicio memoria RAM
-TOP:            EQU $0ff        ; Fim memoria RAM
+RAM:            EQU $200        ; Inicio memoria RAM
+TOP:            EQU $2ff        ; Fim memoria RAM
 COUNTER:        EQU RAM + 2     ; Memoria do contador
-;DEV1:           EQU $01
-;DEV2:           EQU $02
+DEV1:           EQU $01
+DEV2:           EQU $02
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; RESET HARDWARE e Vetores de Interrupcao
@@ -30,6 +30,16 @@ reset:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 boot:           
         ld sp,TOP
+        ld hl,TOP
+        ld bc,300
+        CCF
+.clear
+        ld (hl),$0
+        dec hl
+        dec bc
+        ld a,b
+        sbc a,c
+        jr nz, .clear
 int8:      
         ei
         mi1
