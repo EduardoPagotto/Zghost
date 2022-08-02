@@ -1,63 +1,89 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; PRIMEIRO TESTE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Main
 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-RAM:            EQU 0100H  ; INICIO DA RAM, CFG EM CONSOLE.TOTROM
-TOP:            EQU 0120H  ; FIM DA RAM, CFG EM CONSOLE.TOTROM + CONNSOLE.SIZERAM
-INT_OUNTER:     EQU RAM + 2
-DEV1:           EQU 0X01
-DEV2:           EQU 0X02
+RAM:            EQU $100        ; Inicio memoria RAM
+TOP:            EQU $0ff        ; Fim memoria RAM
+COUNTER:        EQU RAM + 2     ; Memoria do contador
+;DEV1:           EQU $01
+;DEV2:           EQU $02
 
-                ORG 0X0000
-START:          JP BOOT
-                ;
-                ORG 0008H
-                JP BOOL_FRIO
-                ;
-BOOT:           LD SP,TOP
-BOOL_FRIO:      EI
-                MI1
-DORMIR:         HALT
-                JR DORMIR
-                ;
-                ORG 0038H
-                JR INTERRUPT38
-                ;
-DEFW 0XF0F0
-                ;
-                ORG 0066H
-                JP INTETRRUPT66
-                ORG 0080H
-INTETRRUPT66:   PUSH AF
-                PUSH BC
-                PUSH DE
-                PUSH HL
-                PUSH IX
-                PUSH IY
-                EXX
-                CALL EXEC_INTERRUPT
-                EXX
-                POP IY
-                POP IX
-                POP HL
-                POP DE
-                POP BC
-                POP AF
-                RETN
-EXEC_INTERRUPT: NOP
-                RET
-                ;
-CONTINUA:       LD A,(INT_OUNTER)
-                INC A
-                LD (INT_OUNTER),A
-                RET
-INTERRUPT38:    DI
-                EX AF,AF'
-                EXX
-                CALL CONTINUA
-                EXX
-                EX AF,AF'
-                EI
-                RETI
-                END
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; RESET HARDWARE e Vetores de Interrupcao
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        org $0
+reset:          
+        jp boot                 ; Salta para reset principal
+        ;
+        org $8
+        jp int8
+        ;
+        org $38 
+        jp int38        ; entrada interrupcao 38 (principal)
+        ;
+        org $66
+        jp nmi
+        ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Clear Memory na interrupcao int8
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+boot:           
+        ld sp,TOP
+int8:      
+        ei
+        mi1
+dormir:       
+        halt
+        jr dormir       ; ao voltar da interrupcao entrar em halt novamente   
+        ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; NMI  interrupcao de alta prioridade
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        org $80
+nmi:   
+        push af
+        push bc
+        push de
+        push hl
+        push ix
+        push iy
+        exx
+        call .exec_nmi
+        exx
+        pop iy
+        pop ix
+        pop hl
+        pop de
+        pop bc
+        pop af
+        retn
+.exec_nmi: 
+        nop        
+        ret
+        ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Incrementa contador
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+.continua:  
+        ld a,(COUNTER)
+        inc a
+        ld (COUNTER),a
+        ret
+        ;
+int38:    
+        di
+        ex af,af'
+        exx
+        call .continua
+        exx
+        ex af,af'
+        ei
+        reti
+        ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Sinalizacao de 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        defw reset
+        defb 'FI'
+        end

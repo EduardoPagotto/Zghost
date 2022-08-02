@@ -6,7 +6,7 @@ const uint8_t Z80::halfcarrySubTable[] = {0, 0, FLAG_H, 0, FLAG_H, 0, FLAG_H, FL
 const uint8_t Z80::overflowAddTable[] = {0, 0, 0, FLAG_V, FLAG_V, 0, 0, 0};
 const uint8_t Z80::overflowSubTable[] = {0, FLAG_V, 0, 0, 0, 0, FLAG_V, 0};
 
-Z80::Z80() : A(0xff), sp(0xffff), pc(0x0000), null_val(0) {
+Z80::Z80() : A(0xff), sp(0xffff), pc(0x0000), Tstates(0), null_val(0) {
 
     F = B = C = D = E = H = L = 0;
     A_ = F_ = B_ = C_ = D_ = E_ = H_ = L_ = 0;
