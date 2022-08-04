@@ -11,7 +11,7 @@ DEV2:           EQU $02
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; RESET HARDWARE e Vetores de Interrupcao
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        org $0
+        org $0                  ; addr 0x0000
 reset:          
         jp boot                 ; Salta para reset principal
         ;
