@@ -2,7 +2,6 @@
 ;; Main
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 RAM:            EQU $200        ; Inicio memoria RAM
 TOP:            EQU $2ff        ; Fim memoria RAM
 COUNTER:        EQU RAM + 2     ; Memoria do contador
@@ -16,13 +15,13 @@ DEV2:           EQU $02
 reset:          
         jp boot                 ; Salta para reset principal
         ;
-        org $8
+        ds $8 - $               ; 8 - address prev. (8 - 2) = ds 4,0
         jp int8
         ;
-        org $38 
-        jp int38        ; entrada interrupcao 38 (principal)
+        ds $38 - $              ; 56 - address prev. (56 - 10) = ds 46
+        jp int38                ; entrada interrupcao 38 (principal)
         ;
-        org $66
+        ds $66 - $             
         jp nmi
         ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -31,18 +30,18 @@ reset:
 boot:           
         ld sp,TOP
         ld hl,TOP
-        ld bc,300
+        ld bc,256
         CCF
 .clear
         ld (hl),$0
         dec hl
         dec bc
         ld a,b
-        sbc a,c
+        or c
         jr nz, .clear
 int8:      
         ei
-        mi1
+        ;mi1
 dormir:       
         halt
         jr dormir       ; ao voltar da interrupcao entrar em halt novamente   
@@ -50,7 +49,7 @@ dormir:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; NMI  interrupcao de alta prioridade
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        org $80
+        ds $84 - $     ; org $100
 nmi:   
         push af
         push bc
@@ -75,12 +74,6 @@ nmi:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Incrementa contador
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-.continua:  
-        ld a,(COUNTER)
-        inc a
-        ld (COUNTER),a
-        ret
-        ;
 int38:    
         di
         ex af,af'
@@ -91,9 +84,17 @@ int38:
         ei
         reti
         ;
+.continua:  
+        ld a,(COUNTER)
+        inc a
+        ld (COUNTER),a
+        ret
+        ;
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Sinalizacao de 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        defw reset
+        ds $1fc - $
         defb 'FI'
+        defw reset
         end

@@ -10,7 +10,7 @@ Console::Console() {
     uint16_t idPortA = bus.add(DeviceType::IO, "PortA", new Latch(0x0001, DSTAT_ENABLED | DSTAT_READWRITE));          // PORT A
     uint16_t idPortB = bus.add(DeviceType::IO, "PortB", new Latch(0x0002, DSTAT_ENABLED | DSTAT_READWRITE));          // PORT B
 
-    bus.load("./bin/ROM.bin", idRom);
+    bus.load("./bin/main.bin", idRom);
 
     z80.create(&bus);
     z80.reset();

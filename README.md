@@ -1,17 +1,35 @@
 # Zghost
 Z80 processor emulator in c++ (to compare with Zzemu in Golang)
 
-## compiler
-ref: https://pasmo.speccy.org/
+## Dependencias Compilador e Simulador auxiliar
+```bash
+# Lua
+sudo apt install lua5.4
+
+# Compiler sjasmplus
+git clone git@github.com:vinniefalco/LuaBridge.git
+git clone git@github.com:z00m128/sjasmplus.git
+# Linkar sjasmplus -> LuaBridge
+
+# Example
+git clone git@github.com:maziac/z80-sample-program.git
+
+# Rumtime
+git clone git@github.com:chernandezba/zesarux.git
+```
+
+TODO: executar o debug no simulador! preciso refazer DEVICE ainda nao sei como!!!
+https://z00m128.github.io/sjasmplus/documentation.html#po_device
 
 ## Extencoes do VScode:
 ```bash
 code --list-extensions | xargs -L 1 echo code --install-extension
 
-code --install-extension cschlosser.doxdocgen
 code --install-extension Gruntfuggly.todo-tree
 code --install-extension jeff-hykin.better-cpp-syntax
-code --install-extension mborik.z80-macroasm
+code --install-extension maziac.asm-code-lens
+code --install-extension maziac.dezog
+code --install-extension maziac.z80-instruction-set
 code --install-extension ms-vscode.cmake-tools
 code --install-extension ms-vscode.cpptools
 code --install-extension ms-vscode.cpptools-extension-pack
@@ -22,8 +40,8 @@ code --install-extension QiaoJie.binary-viewer
 code --install-extension twxs.cmake
 code --install-extension vadimcn.vscode-lldb
 code --install-extension xaver.clang-format
-```
 
+```
 
 ## Resumo diretivas para 8 bis
 ```asm
