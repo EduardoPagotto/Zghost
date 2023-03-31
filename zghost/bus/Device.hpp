@@ -3,9 +3,9 @@
 #include <tuple>
 #include <vector>
 
-#define DSTAT_ENABLED 0x01   // 0b00000001
-#define DSTAT_CHANGED 0x02   // 0b00000010
-#define DSTAT_READWRITE 0x04 // 0b00000100
+#define DSTAT_ENABLED 0x01   // status bitwise 0b00000001
+#define DSTAT_CHANGED 0x02   // status bitwise 0b00000010
+#define DSTAT_READWRITE 0x04 // status bitwise 0b00000100
 
 enum class DevType { MEMORY = 0, IO = 1 };
 
