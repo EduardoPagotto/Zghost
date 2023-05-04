@@ -1,53 +1,37 @@
 #include <fstream>
 #include <zghost/bus/Bus.hpp>
 
-Device* Bus::get(const uint16_t& index) { return this->vDevs[index].device; }
-
-Device* Bus::get(const std::string& name) {
-    for (auto& v : vDevs) {
-        if (v.name == name)
-            return v.device;
-    }
-    return nullptr;
-}
-
-uint16_t Bus::add(const DeviceType& type, const std::string& name, Device* dev) {
+uint32_t Bus::add(Device* dev) {
     size_t index = vDevs.size();
-    vDevs.push_back(DevicePack(type, name, dev));
+    vDevs.push_back(dev);
     return index;
 }
 
-uint16_t Bus::getIndex(const std::string& name) {
-    uint16_t index = 0;
+bool Bus::hasData(const uint32_t& address) const {
     for (auto& v : vDevs) {
-        if (v.name == name)
-            return index;
+        if (v->validRange(address, 0))
+            return true;
     }
-    return -1;
+    return false;
 }
 
-DeviceType Bus::getType(const uint16_t& index) { return this->vDevs[index].type; }
-
-uint8_t Bus::read(const DeviceType& type, const uint16_t& address) {
-    uint8_t ret = 0xff;
+uint8_t Bus::load(const uint32_t& address) {
 
     for (auto& v : vDevs) {
-        if (v.type == type) {
-            if (v.device->read(address, ret))
-                return ret;
-        }
+        uint8_t ret = 0xff;
+        if (v->read(address, 1, &ret))
+            return ret;
     }
 
     return -1;
 }
 
-void Bus::write(const DeviceType& type, const uint16_t& address, const uint8_t& value) {
+void Bus::store(const uint32_t& address, const uint8_t& value) {
 
     for (auto& v : vDevs) {
-        if (v.type == type) {
-            if (v.device->write(address, value))
-                return;
-        }
+        uint8_t vv = value;
+        if (v->write(address, 1, &vv))
+            return;
     }
 }
 
@@ -56,7 +40,18 @@ void Bus::load(const std::string& file, uint16_t index) {
     std::ifstream instream(file, std::ios::in | std::ios::binary);
     std::vector<uint8_t> data((std::istreambuf_iterator<char>(instream)), std::istreambuf_iterator<char>());
 
-    Device* dev = get(index);
-    for (int i = 0; i < data.size(); i++)
-        dev->getRaw()[i] = data[i];
+    if (index < vDevs.size()) {
+        Device* dev = vDevs[index];
+
+        bool alterar = false;
+        if (!dev->isRW()) {
+            dev->setRW(true);
+            alterar = true;
+        }
+
+        dev->write(dev->getStart(), data.size(), &data[0]);
+
+        if (alterar)
+            dev->setRW(false);
+    }
 }

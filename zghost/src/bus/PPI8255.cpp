@@ -2,7 +2,7 @@
 
 // verificar: https://github.com/bibekdahal/8085-simulator/blob/master/PPI.py
 
-PPI8255::PPI8255(const uint16_t& address, const uint8_t& status) : Memory(address, 4, DSTAT_ENABLED) {
+PPI8255::PPI8255(const uint16_t& address, const uint8_t& status) : Memory(address, 4, DEV_OPENED) {
 
     mem[0] = 0; // A
     mem[1] = 0; // B
@@ -12,10 +12,10 @@ PPI8255::PPI8255(const uint16_t& address, const uint8_t& status) : Memory(addres
 
 PPI8255::~PPI8255() {}
 
-bool PPI8255::read(const uint16_t& address, uint8_t& valueRet) { // FIXME: NAO FUNCIONA!!!
+bool PPI8255::read(const uint32_t& address, const uint32_t& size, uint8_t* valueRet) { // FIXME: NAO FUNCIONA!!!
 
-    valueRet = 0xff;
-    if (!okRead(address))
+    *valueRet = 0xff;
+    if (!validRange(address, size))
         return false;
 
     if ((mem[3] & 0x80) != 0x80)
@@ -27,25 +27,25 @@ bool PPI8255::read(const uint16_t& address, uint8_t& valueRet) { // FIXME: NAO F
         return false;
 
     } else if (t == 0x00) {
-        valueRet = this->inA();
+        *valueRet = this->inA();
 
     } else if (t == 0x01) {
-        valueRet = this->inB();
+        *valueRet = this->inB();
 
     } else if (t == 0x02)
-        valueRet = this->inC();
+        *valueRet = this->inC();
 
     return true;
 }
 
-bool PPI8255::write(const uint16_t& address, const uint8_t& value) {
+bool PPI8255::write(const uint32_t& address, const uint32_t& size, uint8_t* value) {
 
-    if (!okWrite(address))
+    if (!validWrite(address, size))
         return false;
 
     uint16_t t = address - start;
     if (t == 0x03) { // Control
-        mem[3] = value;
+        mem[3] = *value;
         if ((mem[3] & 0x80) != 0x80) {
             this->bsr();
         }
@@ -54,13 +54,13 @@ bool PPI8255::write(const uint16_t& address, const uint8_t& value) {
         return false;
 
     } else if (t == 0x0) {
-        this->outA(value);
+        this->outA(*value);
 
     } else if (t == 0x1) {
-        this->outB(value);
+        this->outB(*value);
 
     } else if (t == 0x2) {
-        this->outC(value);
+        this->outC(*value);
     }
 
     return true;

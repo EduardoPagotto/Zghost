@@ -5,14 +5,8 @@
 
 Console::Console() {
 
-    uint16_t idRom = bus.add(DeviceType::MEMORY, "ROM", new Memory(0x0000, 0x0200, DSTAT_ENABLED));                   // ROM
-    uint16_t idRam = bus.add(DeviceType::MEMORY, "RAM", new Memory(0x0200, 0x0100, DSTAT_ENABLED | DSTAT_READWRITE)); // RAM
-    uint16_t idPortA = bus.add(DeviceType::IO, "PortA", new Latch(0x0001, DSTAT_ENABLED | DSTAT_READWRITE));          // PORT A
-    uint16_t idPortB = bus.add(DeviceType::IO, "PortB", new Latch(0x0002, DSTAT_ENABLED | DSTAT_READWRITE));          // PORT B
-
-    bus.load("./bin/main.bin", idRom);
-
-    z80.create(&bus);
+    z80.createMemory(&busMemory);
+    z80.createIO(&busIO);
     z80.reset();
 }
 
@@ -20,12 +14,19 @@ Console::~Console() {}
 
 void Console::exec() {
 
-    Latch* porta = (Latch*)bus.get("PortA");
+    uint32_t idRom = busMemory.add(new Memory(0x0000, 0x0200, DEV_OPENED));          // ROM
+    uint32_t idRam = busMemory.add(new Memory(0x0200, 0x0100, DEV_OPENED | DEV_RW)); // RAM
+    uint32_t idPortA = busIO.add(new Latch(0x0001, DEV_OPENED | DEV_RW));            // PORT A
+    uint32_t idPortB = busIO.add(new Latch(0x0002, DEV_OPENED | DEV_RW));            // PORT B
+
+    busMemory.load("./bin/main.bin", idRom);
+
+    Latch* porta = (Latch*)busIO.get(idPortA);
 
     while (true) {
         z80.step();
 
-        if (porta->getStatus() & DSTAT_CHANGED) {
+        if (porta->getStatus() & DEV_CHANGED) {
             uint8_t value;
             if (porta->readDirect(value))
                 printf("Recebido: %d\n", value);

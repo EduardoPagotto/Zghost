@@ -1,8 +1,8 @@
 #include <zghost/bus/Latch.hpp>
 
 bool Latch::readDirect(uint8_t& valueRet) {
-    if (status & DSTAT_ENABLED) {
-        status &= (~DSTAT_CHANGED);
+    if (status & DEV_OPENED) {
+        status &= (~DEV_CHANGED);
         valueRet = mem[0];
         return true;
     }
@@ -10,8 +10,8 @@ bool Latch::readDirect(uint8_t& valueRet) {
 }
 
 bool Latch::writeDirect(const uint8_t& value) {
-    if (status &= (DSTAT_READWRITE | DSTAT_ENABLED)) {
-        status |= DSTAT_CHANGED;
+    if (status &= (DEV_RW | DEV_OPENED)) {
+        status |= DEV_CHANGED;
         mem[0] = value;
         return true;
     }

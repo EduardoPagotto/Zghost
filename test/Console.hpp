@@ -9,5 +9,6 @@ class Console {
 
   private:
     Z80 z80;
-    Bus bus;
+    Bus busMemory;
+    Bus busIO;
 };

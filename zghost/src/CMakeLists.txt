@@ -10,7 +10,6 @@ set (SourcesCore z80/Z80.cpp
                  z80/OpCodeDD.cpp
                  z80/OpCodeFD.cpp
                  z80/OpCodeDDCBFDCB.cpp
-                 bus/Memory.cpp
                  bus/Bus.cpp
                  bus/Latch.cpp
                  bus/PPI8255.cpp)

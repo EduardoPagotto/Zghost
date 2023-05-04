@@ -6,8 +6,8 @@ class PPI8255 : public Memory {
   public:
     PPI8255(const uint16_t& address, const uint8_t& status);
     virtual ~PPI8255();
-    virtual bool read(const uint16_t& address, uint8_t& valueRet) override;
-    virtual bool write(const uint16_t& address, const uint8_t& value) override;
+    virtual bool read(const uint32_t& address, const uint32_t& size, uint8_t* valueRet) override;
+    virtual bool write(const uint32_t& address, const uint32_t& size, uint8_t* value) override;
 
     void strobeA();
     void strobeB();
